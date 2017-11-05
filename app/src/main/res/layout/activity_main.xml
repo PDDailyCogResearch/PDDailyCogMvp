@@ -17,6 +17,11 @@
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
         android:padding="10dp"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/test_button"
+        android:text="test"/>
 
     <TextView
         android:id="@+id/tv_access_token"

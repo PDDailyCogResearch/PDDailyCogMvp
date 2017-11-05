@@ -7,7 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
+import  butterknife.ButterKnife;
+import il.ac.pddailycogresearch.pddailycog.DemoApplication;
 import  il.ac.pddailycogresearch.pddailycog.di.component.ActivityComponent;
 import  il.ac.pddailycogresearch.pddailycog.di.component.DaggerActivityComponent;
 import  il.ac.pddailycogresearch.pddailycog.di.module.ActivityModule;
@@ -23,17 +24,18 @@ public abstract class BaseActivity<T extends BaseMvpPresenter> extends AppCompat
      */
     @Inject
     T mPresenter;
+    private ActivityComponent activityComponent;
 
-    private ActivityComponent mActivityComponent;
+    //private ActivityComponent mActivityComponent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getContentResource());
         ButterKnife.bind(this);
-        mActivityComponent = DaggerActivityComponent.builder()
+        /*mActivityComponent = DaggerActivityComponent.builder()
                 .activityModule(new ActivityModule(this))
-                .build();
+                .build();*/
         injectDependencies();
         mPresenter.attach(this);
         init(savedInstanceState);
@@ -49,9 +51,9 @@ public abstract class BaseActivity<T extends BaseMvpPresenter> extends AppCompat
     }
 
 
-    public ActivityComponent getActivityComponent() {
+   /* public ActivityComponent getActivityComponent() {
         return mActivityComponent;
-    }
+    }*/
 
     /**
      * Getter for the presenter
@@ -79,5 +81,15 @@ public abstract class BaseActivity<T extends BaseMvpPresenter> extends AppCompat
      * Injecting dependencies
      */
     protected abstract void injectDependencies();
+
+    public ActivityComponent getActivityComponent() {
+        if (activityComponent == null) {
+            activityComponent = DaggerActivityComponent.builder()
+                    .activityModule(new ActivityModule(this))
+                    .applicationComponent(DemoApplication.get(this).getComponent())
+                    .build();
+        }
+        return activityComponent;
+    }
 
 }
