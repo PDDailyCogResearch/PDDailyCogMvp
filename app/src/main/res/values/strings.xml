@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">PDDailyCog</string>
+
+    <string name="some_error">Some Error Occurred!</string>
+
+    <!--Login-->
+    <string name="login_dummy">Login Dummy</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+
+    <!--Login Validation-->
+    <string name="empty_email">Please provide a non empty email.</string>
+    <string name="invalid_email">Please provide a valid email.</string>
+    <string name="empty_password">Please provide a non empty password.</string>
 </resources>

@@ -2,16 +2,23 @@ package il.ac.pddailycogresearch.pddailycog.di.module;
 
 import android.app.Activity;
 import android.content.Context;
-
-import javax.inject.Singleton;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 
 import il.ac.pddailycogresearch.pddailycog.di.ActivityContext;
 
 import dagger.Module;
 import dagger.Provides;
 import il.ac.pddailycogresearch.pddailycog.di.PerActivity;
-import il.ac.pddailycogresearch.pddailycog.ui.main.MainContract;
+import il.ac.pddailycogresearch.pddailycog.ui.login.LoginMvpPresenter;
+import il.ac.pddailycogresearch.pddailycog.ui.login.LoginMvpView;
+import il.ac.pddailycogresearch.pddailycog.ui.login.LoginPresenter;
+import il.ac.pddailycogresearch.pddailycog.ui.main.MainMvpPresenter;
+import il.ac.pddailycogresearch.pddailycog.ui.main.MainMvpView;
 import il.ac.pddailycogresearch.pddailycog.ui.main.MainPresenter;
+import il.ac.pddailycogresearch.pddailycog.utils.rx.AppSchedulerProvider;
+import il.ac.pddailycogresearch.pddailycog.utils.rx.SchedulerProvider;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Created by janisharali on 08/12/16.
@@ -20,10 +27,10 @@ import il.ac.pddailycogresearch.pddailycog.ui.main.MainPresenter;
 @Module
 public class ActivityModule {
 
-    private Activity mActivity;
+    private AppCompatActivity mActivity;
 
-    public ActivityModule(Activity activity) {
-        mActivity = activity;
+    public ActivityModule(AppCompatActivity activity) {
+        this.mActivity = activity;
     }
 
     @Provides
@@ -33,21 +40,40 @@ public class ActivityModule {
     }
 
     @Provides
-    Activity provideActivity() {
+    AppCompatActivity provideActivity() {
         return mActivity;
     }
 
-/*
-    private Context mContext;
+    @Provides
+    CompositeDisposable provideCompositeDisposable() {
+        return new CompositeDisposable();
+    }
 
-    public ActivityModule(Context context) {
-        mContext = context;
-    }*/
+    @Provides
+    SchedulerProvider provideSchedulerProvider() {
+        return new AppSchedulerProvider();
+    }
+
 
 
     @Provides
     @PerActivity
-    MainContract.Presenter providesMainPresenter() {
-        return new MainPresenter();
+    LoginMvpPresenter<LoginMvpView> provideLoginPresenter(
+            LoginPresenter<LoginMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    @PerActivity
+    MainMvpPresenter<MainMvpView> provideMainPresenter(
+            MainPresenter<MainMvpView> presenter) {
+        return presenter;
+    }
+
+
+    @Provides
+    LinearLayoutManager provideLinearLayoutManager(AppCompatActivity activity) {
+        return new LinearLayoutManager(activity);
     }
 }
+

@@ -3,7 +3,7 @@ package il.ac.pddailycogresearch.pddailycog.di.component;
 import android.app.Application;
 import android.content.Context;
 
-import il.ac.pddailycogresearch.pddailycog.DemoApplication;
+import il.ac.pddailycogresearch.pddailycog.PDCApp;
 import il.ac.pddailycogresearch.pddailycog.data.DataManager;
 import il.ac.pddailycogresearch.pddailycog.data.DbHelper;
 import il.ac.pddailycogresearch.pddailycog.data.SharedPrefsHelper;
@@ -23,7 +23,7 @@ import dagger.Component;
 @Component(modules = ApplicationModule.class)
 public interface ApplicationComponent {
 
-    void inject(DemoApplication demoApplication);
+    void inject(PDCApp PDCApp);
 
     @ApplicationContext
     Context getContext();
