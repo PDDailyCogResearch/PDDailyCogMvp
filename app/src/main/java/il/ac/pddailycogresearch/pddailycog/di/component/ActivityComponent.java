@@ -1,7 +1,6 @@
 package il.ac.pddailycogresearch.pddailycog.di.component;
 
-import javax.inject.Singleton;
-
+import il.ac.pddailycogresearch.pddailycog.ui.login.LoginActivity;
 import il.ac.pddailycogresearch.pddailycog.ui.main.MainActivity;
 import il.ac.pddailycogresearch.pddailycog.di.PerActivity;
 import il.ac.pddailycogresearch.pddailycog.di.module.ActivityModule;
@@ -13,11 +12,11 @@ import dagger.Component;
  */
 
 @PerActivity
-//@Singleton
 @Component(dependencies = ApplicationComponent.class, modules = ActivityModule.class)
 public interface ActivityComponent {
 
+    void inject(MainActivity activity);
 
-    void inject(MainActivity mainActivity);
+    void inject(LoginActivity activity);
 
 }

@@ -3,9 +3,9 @@ package il.ac.pddailycogresearch.pddailycog.di.component;
 import android.app.Application;
 import android.content.Context;
 
-import il.ac.pddailycogresearch.pddailycog.DemoApplication;
+import il.ac.pddailycogresearch.pddailycog.PDCApp;
 import il.ac.pddailycogresearch.pddailycog.data.DataManager;
-import il.ac.pddailycogresearch.pddailycog.data.DbHelper;
+import il.ac.pddailycogresearch.pddailycog.data.FirebaseDbHelper;
 import il.ac.pddailycogresearch.pddailycog.data.SharedPrefsHelper;
 import il.ac.pddailycogresearch.pddailycog.di.ApplicationContext;
 import il.ac.pddailycogresearch.pddailycog.di.module.ApplicationModule;
@@ -23,7 +23,7 @@ import dagger.Component;
 @Component(modules = ApplicationModule.class)
 public interface ApplicationComponent {
 
-    void inject(DemoApplication demoApplication);
+    void inject(PDCApp pdcApp);
 
     @ApplicationContext
     Context getContext();
@@ -34,6 +34,6 @@ public interface ApplicationComponent {
 
     SharedPrefsHelper getPreferenceHelper();
 
-    DbHelper getDbHelper();
+   // FirebaseDbHelper getDbHelper();
 
 }

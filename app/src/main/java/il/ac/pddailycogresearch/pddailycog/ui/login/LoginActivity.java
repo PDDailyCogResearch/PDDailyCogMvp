@@ -13,53 +13,71 @@
  * limitations under the License
  */
 
-package il.ac.pddailycogresearch.pddailycog.ui.main;
+package il.ac.pddailycogresearch.pddailycog.ui.login;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
+import android.view.View;
+import android.widget.EditText;
+
+import il.ac.pddailycogresearch.pddailycog.R;
+import il.ac.pddailycogresearch.pddailycog.ui.base.BaseActivity;
+import il.ac.pddailycogresearch.pddailycog.ui.main.MainActivity;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import il.ac.pddailycogresearch.pddailycog.R;
-import il.ac.pddailycogresearch.pddailycog.ui.base.BaseActivity;
-import il.ac.pddailycogresearch.pddailycog.ui.login.LoginActivity;
+
 
 /**
  * Created by janisharali on 27/01/17.
  */
 
-public class MainActivity extends BaseActivity implements MainMvpView {
+public class LoginActivity extends BaseActivity implements LoginMvpView {
 
     @Inject
-    MainMvpPresenter<MainMvpView> mPresenter;
-    @BindView(R.id.test_button)
-    Button testButton;
+    LoginMvpPresenter<LoginMvpView> mPresenter;
 
+    @BindView(R.id.et_email)
+    EditText mEmailEditText;
+
+    @BindView(R.id.et_password)
+    EditText mPasswordEditText;
 
     public static Intent getStartIntent(Context context) {
-        Intent intent = new Intent(context, MainActivity.class);
+        Intent intent = new Intent(context, LoginActivity.class);
         return intent;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
 
         getActivityComponent().inject(this);
 
         setUnBinder(ButterKnife.bind(this));
 
-        mPresenter.onAttach(this);
-
-        setUp();
+        mPresenter.onAttach(LoginActivity.this);
     }
 
+    @OnClick(R.id.btn_server_login)
+    void onServerLoginClick(View v) {
+        mPresenter.onServerLoginClick(mEmailEditText.getText().toString(),
+                mPasswordEditText.getText().toString());
+    }
+
+
+
+    @Override
+    public void openMainActivity() {
+        Intent intent = MainActivity.getStartIntent(LoginActivity.this);
+        startActivity(intent);
+        finish();
+    }
 
     @Override
     protected void onDestroy() {
@@ -67,22 +85,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         super.onDestroy();
     }
 
-
     @Override
     protected void setUp() {
-        mPresenter.onViewInitialized();
-    }
 
-
-    @Override
-    public void openLoginActivity() {
-        startActivity(LoginActivity.getStartIntent(this));
-        finish();
-    }
-
-
-    @OnClick(R.id.test_button)
-    public void onViewClicked() {
-        openLoginActivity();
     }
 }

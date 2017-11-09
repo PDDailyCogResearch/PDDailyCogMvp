@@ -14,15 +14,15 @@ import javax.inject.Inject;
  * Created by janisharali on 25/12/16.
  */
 
-public class DemoApplication extends Application {
+public class PDCApp extends Application {
 
     protected ApplicationComponent applicationComponent;
 
     @Inject
     DataManager dataManager;
 
-    public static DemoApplication get(Context context) {
-        return (DemoApplication) context.getApplicationContext();
+    public static PDCApp get(Context context) {
+        return (PDCApp) context.getApplicationContext();
     }
 
     @Override
