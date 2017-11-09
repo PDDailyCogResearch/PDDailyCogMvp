@@ -4,6 +4,13 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import javax.inject.Singleton;
+
+import il.ac.pddailycogresearch.pddailycog.data.AppDataManager;
+import il.ac.pddailycogresearch.pddailycog.data.DataManager;
+import il.ac.pddailycogresearch.pddailycog.data.DbHelper;
+import il.ac.pddailycogresearch.pddailycog.data.FirebaseDbHelper;
+import il.ac.pddailycogresearch.pddailycog.data.SharedPrefsHelper;
 import il.ac.pddailycogresearch.pddailycog.di.ApplicationContext;
 import il.ac.pddailycogresearch.pddailycog.di.DatabaseInfo;
 
@@ -50,4 +57,17 @@ public class ApplicationModule {
     SharedPreferences provideSharedPrefs() {
         return mApplication.getSharedPreferences("demo-prefs", Context.MODE_PRIVATE);
     }
+    @Provides
+    @Singleton
+    DataManager provideDataManager(AppDataManager appDataManager) {
+        return appDataManager;
+    }
+
+    @Provides
+    @Singleton
+    DbHelper provideDbHelper(FirebaseDbHelper firebaseDbHelper) {
+        return firebaseDbHelper;
+    }
+
+
 }
