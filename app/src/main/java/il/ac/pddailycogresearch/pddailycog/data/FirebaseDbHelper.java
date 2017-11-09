@@ -8,6 +8,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -46,18 +47,39 @@ public class FirebaseDbHelper implements DbHelper {
     }
 
     public void login(String email, String password, final DbLoginListener dbLoginListener) {
+
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener( new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            dbLoginListener.onLoginSuccess();
-                        } else {
 
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            dbLoginListener.onLoginSuccess(user.getDisplayName());
+                        } else {
+                            dbLoginListener.onLoginFailure(task.getException());
                         }
 
                         // ...
+                    }
+                });
+    }
+
+   //TODO delete this and write a script instead
+    private void updateUser(final DbLoginListener dbLoginListener) {
+         FirebaseUser user = mAuth.getCurrentUser();
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName("Bibi")
+                .build();
+
+        user.updateProfile(profileUpdates)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            dbLoginListener.onLoginSuccess(user.getDisplayName());
+                        }
                     }
                 });
     }

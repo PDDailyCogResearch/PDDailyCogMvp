@@ -8,7 +8,8 @@ import il.ac.pddailycogresearch.pddailycog.data.model.User;
 
 public interface DbHelper {
     public interface DbLoginListener {
-        public void onLoginSuccess();
+        public void onLoginSuccess(String displayName);
+        public void onLoginFailure(Exception exception);
     }
 
     public User getUser(String id);

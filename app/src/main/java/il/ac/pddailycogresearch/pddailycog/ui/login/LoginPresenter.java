@@ -62,10 +62,19 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V>
             getMvpView().onError(R.string.empty_password);
             return;
         }
+        getMvpView().showLoading();
         getDataManager().login(email, password, new DbHelper.DbLoginListener() {
             @Override
-            public void onLoginSuccess() {
-                getMvpView().onError("yay your listener work");
+            public void onLoginSuccess(String displayName) {
+                getMvpView().hideLoading();
+                getMvpView().openMainActivity();
+                getMvpView().onError("yay you are "+displayName);//TODO delete
+            }
+
+            @Override
+            public void onLoginFailure(Exception exception) {
+                getMvpView().hideLoading();
+                getMvpView().onError(exception.getMessage());
             }
         });
 
