@@ -21,6 +21,7 @@ import com.androidnetworking.error.ANError;*/
 
 import il.ac.pddailycogresearch.pddailycog.R;
 import il.ac.pddailycogresearch.pddailycog.data.DataManager;
+import il.ac.pddailycogresearch.pddailycog.data.DbHelper;
 import il.ac.pddailycogresearch.pddailycog.ui.base.BasePresenter;
 import il.ac.pddailycogresearch.pddailycog.utils.CommonUtils;
 import il.ac.pddailycogresearch.pddailycog.utils.rx.SchedulerProvider;
@@ -61,7 +62,12 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V>
             getMvpView().onError(R.string.empty_password);
             return;
         }
-
+        getDataManager().login(email, password, new DbHelper.DbLoginListener() {
+            @Override
+            public void onLoginSuccess() {
+                getMvpView().onError("yay your listener work");
+            }
+        });
 
         //region TODO replace
         // getMvpView().showLoading();

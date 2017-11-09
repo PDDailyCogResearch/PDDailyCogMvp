@@ -45,13 +45,12 @@ public class AppDataManager implements DataManager {
         return mDbHelper.getUser(userId);
     }
 
-    @Override
-    public String insertUser(User user) throws Exception {
-        return null;
-    }
-
     public String getCurrentUserDisplayName()
     {
         return mDbHelper.getCurrentUserDisplayName();
+    }
+
+    public void login(String email, String password, DbHelper.DbLoginListener dbLoginListener){
+        mDbHelper.login(email,password,dbLoginListener);
     }
 }

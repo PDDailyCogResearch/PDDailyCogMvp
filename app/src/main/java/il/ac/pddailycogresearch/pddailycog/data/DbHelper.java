@@ -7,7 +7,15 @@ import il.ac.pddailycogresearch.pddailycog.data.model.User;
  */
 
 public interface DbHelper {
-     public User getUser(String id);
-     public String insertUser(User user) throws Exception;
+    public interface DbLoginListener {
+        public void onLoginSuccess();
+    }
+
+    public User getUser(String id);
+
+    public String insertUser(User user) throws Exception;
+
     public String getCurrentUserDisplayName();
+
+    public void login(String email, String password, final DbLoginListener dbLoginListener);
 }

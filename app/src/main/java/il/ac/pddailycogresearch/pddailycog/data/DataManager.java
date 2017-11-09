@@ -14,7 +14,7 @@ import javax.inject.Singleton;
  */
 
 @Singleton
-public interface DataManager extends DbHelper {
+public interface DataManager {
 
     public void saveAccessToken(String accessToken);
 
@@ -25,4 +25,6 @@ public interface DataManager extends DbHelper {
     public User getUser(String userId) throws Resources.NotFoundException, NullPointerException;
 
     public String getCurrentUserDisplayName();
+
+    public void login(String email, String password, DbHelper.DbLoginListener dbLoginListener);
 }
