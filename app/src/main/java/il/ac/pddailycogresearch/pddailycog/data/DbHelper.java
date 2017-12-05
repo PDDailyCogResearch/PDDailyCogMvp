@@ -18,5 +18,7 @@ public interface DbHelper {
 
     public String getCurrentUserDisplayName();
 
+    public String getCurrentUserUid();
+
     public void login(String email, String password, final DbLoginListener dbLoginListener);
 }

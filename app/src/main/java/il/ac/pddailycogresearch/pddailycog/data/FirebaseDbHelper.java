@@ -42,12 +42,15 @@ public class FirebaseDbHelper implements DbHelper {
     }
 
     public String getCurrentUserDisplayName() {
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        return currentUser.getDisplayName();
+        return mAuth.getCurrentUser().getDisplayName();
+    }
+
+    @Override
+    public String getCurrentUserUid() {
+        return mAuth.getCurrentUser().getUid();
     }
 
     public void login(String email, String password, final DbLoginListener dbLoginListener) {
-
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener( new OnCompleteListener<AuthResult>() {
                     @Override
