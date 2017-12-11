@@ -27,4 +27,6 @@ import il.ac.pddailycogresearch.pddailycog.ui.base.MvpPresenter;
 public interface ChoreMvpPresenter<V extends ChoreMvpView> extends MvpPresenter<V> {
 
     void onViewInitialized();
+
+    void onNextClick();
 }

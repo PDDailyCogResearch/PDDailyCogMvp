@@ -27,6 +27,11 @@ public class AppDataManager implements DataManager {
                        DbHelper dbHelper) {
         mContext = context;
         mDbHelper = dbHelper;
+
+        //TODO delete, find place to retrieve from db for init
+        currentChore = new Chore();
+        currentChore.setChoreNum(1);
+        currentChore.setCurrentPartNum(Chore.ChoreParts.INSTRUCTION);
     }
 
     public String getCurrentUserDisplayName()

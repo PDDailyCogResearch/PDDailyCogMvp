@@ -15,17 +15,14 @@
 
 package il.ac.pddailycogresearch.pddailycog.ui.chore;
 
-//import com.androidnetworking.error.ANError;
-
 import javax.inject.Inject;
 
 import il.ac.pddailycogresearch.pddailycog.data.DataManager;
+import il.ac.pddailycogresearch.pddailycog.data.model.Chore;
 import il.ac.pddailycogresearch.pddailycog.ui.base.BasePresenter;
 import il.ac.pddailycogresearch.pddailycog.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
-//import il.ac.pddailycogresearch.pddailycog.data.db.model.Question;
-//import il.ac.pddailycogresearch.pddailycog.data.network.model.LogoutResponse;
 
 
 /**
@@ -48,5 +45,21 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
     @Override
     public void onViewInitialized() {
 
+    }
+
+    @Override
+    public void onNextClick() {
+        Chore.ChoreParts nextPart =  getDataManager().getCurrentChore().getCurrentPartNum().next();
+        if (nextPart != null) {
+            getDataManager().getCurrentChore().setCurrentPartNum(nextPart);
+            getMvpView().replaceBodyViews(nextPart.ordinal()-1);
+        }
+        else
+            finishChore();
+
+    }
+
+    private void finishChore() {
+        //TODO
     }
 }

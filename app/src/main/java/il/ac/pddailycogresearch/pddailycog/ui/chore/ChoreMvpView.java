@@ -24,5 +24,5 @@ import il.ac.pddailycogresearch.pddailycog.ui.base.MvpView;
 public interface ChoreMvpView extends MvpView {
 
 
-
+    void replaceBodyViews(int viewIdx);
 }
