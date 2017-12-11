@@ -10,7 +10,6 @@ import il.ac.pddailycogresearch.pddailycog.data.AppDataManager;
 import il.ac.pddailycogresearch.pddailycog.data.DataManager;
 import il.ac.pddailycogresearch.pddailycog.data.DbHelper;
 import il.ac.pddailycogresearch.pddailycog.data.FirebaseDbHelper;
-import il.ac.pddailycogresearch.pddailycog.data.SharedPrefsHelper;
 import il.ac.pddailycogresearch.pddailycog.di.ApplicationContext;
 import il.ac.pddailycogresearch.pddailycog.di.DatabaseInfo;
 

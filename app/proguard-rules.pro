@@ -23,3 +23,9 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+#enable firebase model serialization
+-keepattributes Signature
+-keepclassmembers class il.ac.pddailycogresearch.pddailycog.data.model.** {
+  *;
+}

@@ -10,6 +10,9 @@ import il.ac.pddailycogresearch.pddailycog.di.ActivityContext;
 import dagger.Module;
 import dagger.Provides;
 import il.ac.pddailycogresearch.pddailycog.di.PerActivity;
+import il.ac.pddailycogresearch.pddailycog.ui.chore.ChoreMvpPresenter;
+import il.ac.pddailycogresearch.pddailycog.ui.chore.ChoreMvpView;
+import il.ac.pddailycogresearch.pddailycog.ui.chore.ChorePresenter;
 import il.ac.pddailycogresearch.pddailycog.ui.login.LoginMvpPresenter;
 import il.ac.pddailycogresearch.pddailycog.ui.login.LoginMvpView;
 import il.ac.pddailycogresearch.pddailycog.ui.login.LoginPresenter;
@@ -67,6 +70,13 @@ public class ActivityModule {
     @PerActivity
     MainMvpPresenter<MainMvpView> provideMainPresenter(
             MainPresenter<MainMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    @PerActivity
+    ChoreMvpPresenter<ChoreMvpView> provideChorePresenter(
+            ChorePresenter<ChoreMvpView> presenter) {
         return presenter;
     }
 

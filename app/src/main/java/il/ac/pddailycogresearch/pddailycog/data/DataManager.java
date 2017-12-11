@@ -1,13 +1,8 @@
 package il.ac.pddailycogresearch.pddailycog.data;
 
-import android.content.Context;
-import android.content.res.Resources;
-
-import il.ac.pddailycogresearch.pddailycog.data.model.User;
-import il.ac.pddailycogresearch.pddailycog.di.ApplicationContext;
-
-import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import il.ac.pddailycogresearch.pddailycog.data.model.Chore;
 
 /**
  * Created by janisharali on 25/12/16.
@@ -16,15 +11,16 @@ import javax.inject.Singleton;
 @Singleton
 public interface DataManager {
 
-    public void saveAccessToken(String accessToken);
 
-    public String getAccessToken();
+    String getCurrentUserDisplayName();
 
-    public String createUser(User user) throws Exception;
+    void login(String email, String password, DbHelper.DbLoginListener dbLoginListener);
 
-    public User getUser(String userId) throws Resources.NotFoundException, NullPointerException;
+    Chore getCurrentChore();
 
-    public String getCurrentUserDisplayName();
+    void saveCurrentChore();
 
-    public void login(String email, String password, DbHelper.DbLoginListener dbLoginListener);
+    //TODO retrieve chore, see how its needed...
+
 }
+

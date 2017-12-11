@@ -6,7 +6,6 @@ import android.content.Context;
 import il.ac.pddailycogresearch.pddailycog.PDCApp;
 import il.ac.pddailycogresearch.pddailycog.data.DataManager;
 import il.ac.pddailycogresearch.pddailycog.data.FirebaseDbHelper;
-import il.ac.pddailycogresearch.pddailycog.data.SharedPrefsHelper;
 import il.ac.pddailycogresearch.pddailycog.di.ApplicationContext;
 import il.ac.pddailycogresearch.pddailycog.di.module.ApplicationModule;
 
@@ -32,7 +31,6 @@ public interface ApplicationComponent {
 
     DataManager getDataManager();
 
-    SharedPrefsHelper getPreferenceHelper();
 
    // FirebaseDbHelper getDbHelper();
 

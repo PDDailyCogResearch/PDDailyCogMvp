@@ -9,12 +9,18 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import il.ac.pddailycogresearch.pddailycog.data.model.User;
+import il.ac.pddailycogresearch.pddailycog.data.model.Chore;
 import il.ac.pddailycogresearch.pddailycog.di.ApplicationContext;
+import il.ac.pddailycogresearch.pddailycog.utils.AppConstants;
 
 /**
  * Created by שני on 08/11/2017.
@@ -23,22 +29,13 @@ import il.ac.pddailycogresearch.pddailycog.di.ApplicationContext;
 @Singleton
 public class FirebaseDbHelper implements DbHelper {
     private FirebaseAuth mAuth;
-    // private FirebaseAuth.AuthStateListener mAuthListener;
+    private DatabaseReference mUserReference; //TODO deal with null when not logged in - just to be safe
+
 
     //TODO find something that really need injection. or change in module to "return new fire..."
     @Inject
     public FirebaseDbHelper(@ApplicationContext Context context) {
         mAuth = FirebaseAuth.getInstance();
-    }
-
-    @Override
-    public User getUser(String id) {
-        return null;
-    }
-
-    @Override
-    public String insertUser(User user) throws Exception {
-        return null;
     }
 
     public String getCurrentUserDisplayName() {
@@ -56,19 +53,45 @@ public class FirebaseDbHelper implements DbHelper {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-
                             FirebaseUser user = mAuth.getCurrentUser();
+                            mUserReference = FirebaseDatabase.getInstance().getReference("users").child(user.getUid());
+
                             dbLoginListener.onLoginSuccess(user.getDisplayName());
                         } else {
                             dbLoginListener.onLoginFailure(task.getException());
                         }
 
-                        // ...
                     }
                 });
     }
 
-   //TODO delete this and write a script instead
+    @Override
+    public void retrieveChore(final RetrieveChoreCallback retrieveChoreCallback) {
+
+        ValueEventListener choreListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Chore chore = dataSnapshot.getValue(Chore.class);
+                retrieveChoreCallback.onRetrieved(chore);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                retrieveChoreCallback.onError(new Exception(databaseError.getMessage()));
+                //TODO error handling
+            }
+        };
+        mUserReference.addListenerForSingleValueEvent(choreListener);
+    }
+
+    @Override
+    public void saveChore(Chore chore) {
+        mUserReference.child(AppConstants.CHORES_KEY)
+                .child(String.valueOf(chore.getChoreNum())).setValue(chore);
+
+    }
+
+    //TODO delete this and write a script instead
     private void updateUser(final DbLoginListener dbLoginListener) {
          FirebaseUser user = mAuth.getCurrentUser();
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()

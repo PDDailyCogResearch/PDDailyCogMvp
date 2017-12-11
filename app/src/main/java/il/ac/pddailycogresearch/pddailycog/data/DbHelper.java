@@ -1,24 +1,31 @@
 package il.ac.pddailycogresearch.pddailycog.data;
 
-import il.ac.pddailycogresearch.pddailycog.data.model.User;
+
+import il.ac.pddailycogresearch.pddailycog.data.model.Chore;
 
 /**
  * Created by שני on 08/11/2017.
  */
 
 public interface DbHelper {
-    public interface DbLoginListener {
-        public void onLoginSuccess(String displayName);
-        public void onLoginFailure(Exception exception);
+    interface DbLoginListener {
+        void onLoginSuccess(String displayName);
+
+        void onLoginFailure(Exception exception);//TODO error handling
     }
 
-    public User getUser(String id);
+    interface RetrieveChoreCallback {
+        void onRetrieved(Chore retrievedChore);
+        void onError(Exception exception); //TODO error handling
+    }
 
-    public String insertUser(User user) throws Exception;
+    String getCurrentUserDisplayName();
 
-    public String getCurrentUserDisplayName();
+    String getCurrentUserUid();
 
-    public String getCurrentUserUid();
+    void login(String email, String password, final DbLoginListener dbLoginListener);
 
-    public void login(String email, String password, final DbLoginListener dbLoginListener);
+    void retrieveChore(final RetrieveChoreCallback retrieveChoreCallback);
+
+    void saveChore(Chore chore);
 }
