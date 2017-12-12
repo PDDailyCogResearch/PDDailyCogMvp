@@ -52,7 +52,7 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
         Chore.ChoreParts nextPart =  getDataManager().getCurrentChore().getCurrentPartNum().next();
         if (nextPart != null) {
             getDataManager().getCurrentChore().setCurrentPartNum(nextPart);
-            getMvpView().replaceBodyViews(nextPart.ordinal()-1);
+            getMvpView().replaceBodyViews(nextPart.ordinal());
         }
         else
             finishChore();
