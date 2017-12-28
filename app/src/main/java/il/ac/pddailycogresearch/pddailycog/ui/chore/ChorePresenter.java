@@ -44,22 +44,36 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
 
     @Override
     public void onViewInitialized() {
-
+    //    Chore currentChore = getDataManager().getCurrentChore();
+    //    getMvpView().replaceBodyViews(currentChore.getCurrentPartNum().ordinal());
     }
 
     @Override
     public void onNextClick() {
-        Chore.ChoreParts nextPart =  getDataManager().getCurrentChore().getCurrentPartNum().next();
+       /* Chore.ChoreParts nextPart =  getDataManager().getCurrentChore().getCurrentPartNum().next();
         if (nextPart != null) {
             getDataManager().getCurrentChore().setCurrentPartNum(nextPart);
             getMvpView().replaceBodyViews(nextPart.ordinal());
+        }
+        else
+            finishChore();*/
+        int nextPart =  getDataManager().getCurrentChore().getCurrentPartNum()+1;
+        if (nextPart <=3) {
+            getDataManager().getCurrentChore().setCurrentPartNum(nextPart);
+            getMvpView().replaceBodyViews(nextPart);
         }
         else
             finishChore();
 
     }
 
+    @Override
+    public void foo() {
+        int i = 9/0;
+    }
+
     private void finishChore() {
-        //TODO
+        //TODO UI
+        getDataManager().saveCurrentChore();
     }
 }

@@ -20,6 +20,10 @@ public interface DataManager {
 
     void saveCurrentChore();
 
+    boolean isUserLogged();
+
+    void userLoggedInitialization();
+
     //TODO retrieve chore, see how its needed...
 
 }

@@ -38,6 +38,16 @@ public class FirebaseDbHelper implements DbHelper {
         mAuth = FirebaseAuth.getInstance();
     }
 
+    @Override
+    public void initializeDatabase() {
+        mUserReference = FirebaseDatabase.getInstance().getReference("users").child(getCurrentUserUid());
+    }
+
+    @Override
+    public boolean isUserLogged() {
+        return mAuth.getCurrentUser()!=null;
+    }
+
     public String getCurrentUserDisplayName() {
         return mAuth.getCurrentUser().getDisplayName();
     }
@@ -54,8 +64,6 @@ public class FirebaseDbHelper implements DbHelper {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
-                            mUserReference = FirebaseDatabase.getInstance().getReference("users").child(user.getUid());
-
                             dbLoginListener.onLoginSuccess(user.getDisplayName());
                         } else {
                             dbLoginListener.onLoginFailure(task.getException());
@@ -81,7 +89,7 @@ public class FirebaseDbHelper implements DbHelper {
                 //TODO error handling
             }
         };
-        mUserReference.addListenerForSingleValueEvent(choreListener);
+        mUserReference.child(AppConstants.CHORES_KEY).child("1").addListenerForSingleValueEvent(choreListener);
     }
 
     @Override

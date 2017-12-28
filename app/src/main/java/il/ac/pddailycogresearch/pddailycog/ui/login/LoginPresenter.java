@@ -66,6 +66,7 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V>
         getDataManager().login(email, password, new DbHelper.DbLoginListener() {
             @Override
             public void onLoginSuccess(String displayName) {
+                getDataManager().userLoggedInitialization();
                 getMvpView().hideLoading();
                 getMvpView().openMainActivity();
                 getMvpView().onError("yay you are "+displayName);//TODO delete

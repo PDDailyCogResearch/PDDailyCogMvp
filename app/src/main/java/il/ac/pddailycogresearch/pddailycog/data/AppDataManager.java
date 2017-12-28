@@ -27,11 +27,36 @@ public class AppDataManager implements DataManager {
                        DbHelper dbHelper) {
         mContext = context;
         mDbHelper = dbHelper;
+        if (mDbHelper.isUserLogged())
+            userLoggedInitialization();
+    }
 
-        //TODO delete, find place to retrieve from db for init
-        currentChore = new Chore();
-        currentChore.setChoreNum(1);
-        currentChore.setCurrentPartNum(Chore.ChoreParts.INSTRUCTION);
+    public void userLoggedInitialization() {
+        mDbHelper.initializeDatabase();
+        initializeChore();
+    }
+
+    private void initializeChore() {
+        mDbHelper.retrieveChore(new DbHelper.RetrieveChoreCallback() {
+            @Override
+            public void onRetrieved(Chore retrievedChore) {
+                if (retrievedChore != null)
+                    currentChore = retrievedChore;
+                else {
+                    currentChore = new Chore();
+                    currentChore.setChoreNum(1);
+                   // currentChore.setCurrentPartNum(Chore.ChoreParts.INSTRUCTION);
+                    currentChore.setCurrentPartNum(0);
+                }
+            }
+
+            @Override
+            public void onError(Exception exception) {
+                //TODO error handling
+
+            }
+        });
+
     }
 
     public String getCurrentUserDisplayName()
@@ -51,5 +76,10 @@ public class AppDataManager implements DataManager {
     @Override
     public void saveCurrentChore() {
         mDbHelper.saveChore(currentChore);
+    }
+
+    @Override
+    public boolean isUserLogged() {
+        return mDbHelper.isUserLogged();
     }
 }

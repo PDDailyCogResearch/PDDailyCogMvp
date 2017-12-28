@@ -49,11 +49,12 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V>
 
     @Override
     public void onViewInitialized() {
-        String displayName = getDataManager().getCurrentUserDisplayName();
-        if (displayName == null) {
+
+        if (getDataManager().isUserLogged()) {
             getMvpView().openLoginActivity();
             return;
         }
+        String displayName = getDataManager().getCurrentUserDisplayName();
         getMvpView().showMessage(displayName);
     }
 }

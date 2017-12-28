@@ -38,4 +38,10 @@ public class PDCApp extends Application {
     public ApplicationComponent getComponent(){
         return applicationComponent;
     }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        dataManager.saveCurrentChore();
+    }
 }

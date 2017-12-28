@@ -8,6 +8,8 @@ import il.ac.pddailycogresearch.pddailycog.data.model.Chore;
  */
 
 public interface DbHelper {
+
+
     interface DbLoginListener {
         void onLoginSuccess(String displayName);
 
@@ -18,6 +20,10 @@ public interface DbHelper {
         void onRetrieved(Chore retrievedChore);
         void onError(Exception exception); //TODO error handling
     }
+
+    void initializeDatabase();
+
+    boolean isUserLogged();
 
     String getCurrentUserDisplayName();
 

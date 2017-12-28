@@ -1,10 +1,12 @@
 package il.ac.pddailycogresearch.pddailycog.data.model;
 
+import java.io.Serializable;
+
 /**
  * Created by שני on 08/12/2017.
  */
 
-public class Chore {
+public class Chore implements Serializable {
     public enum ChoreParts{
         INSTRUCTION, TAKE_PICTURE, CHECK_PICTURE, TEXT_INPUT;
         private static ChoreParts[] vals = values();
@@ -18,7 +20,17 @@ public class Chore {
     }
 
     private Integer choreNum;
-    private ChoreParts currentPartNum;
+
+    public Integer getCurrentPartNum() {
+        return currentPartNum;
+    }
+
+    public void setCurrentPartNum(Integer currentPartNum) {
+        this.currentPartNum = currentPartNum;
+    }
+
+    private Integer currentPartNum;
+ //   private ChoreParts currentPartNum;
 
     public Chore() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class) - Firebase requirement
@@ -32,11 +44,11 @@ public class Chore {
         this.choreNum = choreNum;
     }
 
-    public ChoreParts getCurrentPartNum() {
+/*    public ChoreParts getCurrentPartNum() {
         return currentPartNum;
     }
 
     public void setCurrentPartNum(ChoreParts currentPartNum) {
         this.currentPartNum = currentPartNum;
-    }
+    }*/
 }

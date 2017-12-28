@@ -89,7 +89,7 @@ public abstract class BaseActivity extends AppCompatActivity
     @Override
     public void showLoading() {
         hideLoading();
-      //TODO  mProgressDialog = CommonUtils.showLoadingDialog(this);
+        mProgressDialog = CommonUtils.showLoadingDialog(this);
     }
 
     @Override

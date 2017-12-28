@@ -29,4 +29,6 @@ public interface ChoreMvpPresenter<V extends ChoreMvpView> extends MvpPresenter<
     void onViewInitialized();
 
     void onNextClick();
+
+    void foo();
 }
