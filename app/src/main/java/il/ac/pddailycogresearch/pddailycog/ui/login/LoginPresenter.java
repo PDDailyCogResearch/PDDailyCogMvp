@@ -28,7 +28,9 @@ import il.ac.pddailycogresearch.pddailycog.utils.rx.SchedulerProvider;
 
 import javax.inject.Inject;
 
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
 /**
@@ -62,66 +64,37 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V>
             getMvpView().onError(R.string.empty_password);
             return;
         }
-        getMvpView().showLoading();
-        getDataManager().login(email, password, new DbHelper.DbLoginListener() {
-            @Override
-            public void onLoginSuccess(String displayName) {
-                getDataManager().userLoggedInitialization();
-                getMvpView().hideLoading();
-                getMvpView().openMainActivity();
-                getMvpView().onError("yay you are "+displayName);//TODO delete
-            }
 
-            @Override
-            public void onLoginFailure(Exception exception) {
-                getMvpView().hideLoading();
-                getMvpView().onError(exception.getMessage());
-            }
-        });
-
-        //region TODO replace
-        // getMvpView().showLoading();
-        /*getCompositeDisposable().add(getDataManager()
-                .doServerLoginApiCall(new LoginRequest.ServerLoginRequest(email, password))
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(new Consumer<LoginResponse>() {
-                    @Override
-                    public void accept(LoginResponse response) throws Exception {
-                        getDataManager().updateUserInfo(
-                                response.getAccessToken(),
-                                response.getUserId(),
-                                DataManager.LoggedInMode.LOGGED_IN_MODE_SERVER,
-                                response.getUserName(),
-                                response.getUserEmail(),
-                                response.getGoogleProfilePicUrl());
-
-                        if (!isViewAttached()) {
-                            return;
+        getDataManager().login(email, password, null)
+                .doOnSubscribe(
+                        new Consumer<Disposable>() {
+                            @Override
+                            public void accept(@NonNull Disposable disposable) throws Exception {
+                                getMvpView().showLoading();
+                            }
                         }
+                )
+                .subscribe(
+                        new Consumer<Boolean>() {
+                            @Override
+                            public void accept(@NonNull Boolean isLogged) throws Exception {
+                                getMvpView().hideLoading();
+                                if (isLogged)
+                                    getMvpView().openMainActivity();
+                                else
+                                    getMvpView().onError(R.string.login_failed);
 
-                        getMvpView().hideLoading();
-                        getMvpView().openMainActivity();
-
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-
-                        if (!isViewAttached()) {
-                            return;
+                            }
+                        },
+                        new Consumer<Throwable>() {
+                            @Override
+                            public void accept(@NonNull Throwable throwable) throws Exception {
+                                getMvpView().hideLoading();
+                                getMvpView().onError(throwable.getMessage());
+                            }
                         }
+                );
 
-                        getMvpView().hideLoading();
-
-                        // handle the login error here
-                        if (throwable instanceof ANError) {
-                            ANError anError = (ANError) throwable;
-                            handleApiError(anError);
-                        }
-                    }
-                }));*/
-        //endregion
     }
 
 }

@@ -27,4 +27,5 @@ public interface MainMvpView extends MvpView {
 
     void openLoginActivity();
 
+    void openChoreActivity();
 }

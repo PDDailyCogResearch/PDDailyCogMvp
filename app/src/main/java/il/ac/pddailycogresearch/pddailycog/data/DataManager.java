@@ -15,7 +15,7 @@ public interface DataManager {
 
     String getCurrentUserDisplayName();
 
-    void login(String email, String password, DbHelper.DbLoginListener dbLoginListener);
+    Maybe<Boolean> login(String email, String password, DbHelper.DbLoginListener dbLoginListener);
 
     Chore getCurrentChore();
 
@@ -26,6 +26,8 @@ public interface DataManager {
     void userLoggedInitialization();
 
     Maybe<Chore> retrieveChore();
+
+    void logout();
 
     //TODO retrieve chore, see how its needed...
 

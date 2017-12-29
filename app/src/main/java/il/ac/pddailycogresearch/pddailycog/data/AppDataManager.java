@@ -51,6 +51,11 @@ public class AppDataManager implements DataManager {
                 );
     }
 
+    @Override
+    public void logout() {
+        mDbHelper.logout();
+    }
+
     private Chore setCurrentChore(Chore lastChore) {
         if(lastChore.isCompleted())
             currentChore=new Chore();//TODO decide what do hear
@@ -65,8 +70,8 @@ public class AppDataManager implements DataManager {
         return mDbHelper.getCurrentUserDisplayName();
     }
 
-    public void login(String email, String password, DbHelper.DbLoginListener dbLoginListener){
-        mDbHelper.login(email,password,dbLoginListener);
+    public Maybe<Boolean> login(String email, String password, DbHelper.DbLoginListener dbLoginListener){
+        return mDbHelper.login(email,password,dbLoginListener);
     }
 
     @Override

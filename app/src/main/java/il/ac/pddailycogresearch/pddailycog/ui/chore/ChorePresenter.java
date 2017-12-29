@@ -91,7 +91,7 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
 
     @Override
     public void foo() {
-        retrieveChore();
+        getDataManager().logout();
     }
 
     private void finishChore() {

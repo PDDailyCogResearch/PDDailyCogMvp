@@ -1,5 +1,7 @@
 package il.ac.pddailycogresearch.pddailycog.ui.chore;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -17,6 +19,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import il.ac.pddailycogresearch.pddailycog.R;
 import il.ac.pddailycogresearch.pddailycog.ui.base.BaseActivity;
+import il.ac.pddailycogresearch.pddailycog.ui.login.LoginActivity;
 import il.ac.pddailycogresearch.pddailycog.utils.ViewGroupUtils;
 
 public class ChoreActivity extends BaseActivity implements ChoreMvpView {
@@ -56,6 +59,11 @@ public class ChoreActivity extends BaseActivity implements ChoreMvpView {
         mPresenter.onAttach(this);
 
         setUp();
+    }
+
+    public static Intent getStartIntent(Context context) {
+        Intent intent = new Intent(context, ChoreActivity.class);
+        return intent;
     }
 
     private void initilizeBodyViews() {

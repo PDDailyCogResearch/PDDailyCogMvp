@@ -13,11 +13,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.List;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import durdinapps.rxfirebase2.RxFirebaseAuth;
 import durdinapps.rxfirebase2.RxFirebaseDatabase;
 import il.ac.pddailycogresearch.pddailycog.data.model.Chore;
 import il.ac.pddailycogresearch.pddailycog.di.ApplicationContext;
@@ -60,20 +59,16 @@ public class FirebaseDbHelper implements DbHelper {
         return mAuth.getCurrentUser().getUid();
     }
 
-    public void login(String email, String password, final DbLoginListener dbLoginListener) {
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener( new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            dbLoginListener.onLoginSuccess(user.getDisplayName());
-                        } else {
-                            dbLoginListener.onLoginFailure(task.getException());
-                        }
+    public Maybe<Boolean> login(String email, String password, final DbLoginListener dbLoginListener) {
 
-                    }
-                });
+        return RxFirebaseAuth.signInWithEmailAndPassword(mAuth, email, password).map(
+                 new Function<AuthResult, Boolean>() {
+                     @Override
+                     public Boolean apply(@io.reactivex.annotations.NonNull AuthResult authResult) throws Exception {
+                         return authResult.getUser()!=null;
+                     }
+                 }
+         );
     }
 
     @Override
@@ -95,6 +90,11 @@ public class FirebaseDbHelper implements DbHelper {
         mUserReference.child(AppConstants.CHORES_KEY)
                 .child(String.valueOf(chore.getChoreNum())).setValue(chore);
 
+    }
+
+    @Override
+    public void logout() {
+       mAuth.signOut();
     }
 
     //TODO delete this and write a script instead
