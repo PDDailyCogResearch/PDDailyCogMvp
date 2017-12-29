@@ -10,17 +10,20 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import durdinapps.rxfirebase2.RxFirebaseDatabase;
 import il.ac.pddailycogresearch.pddailycog.data.model.Chore;
 import il.ac.pddailycogresearch.pddailycog.di.ApplicationContext;
 import il.ac.pddailycogresearch.pddailycog.utils.AppConstants;
+import io.reactivex.Maybe;
+import io.reactivex.functions.Function;
 
 /**
  * Created by שני on 08/11/2017.
@@ -74,22 +77,17 @@ public class FirebaseDbHelper implements DbHelper {
     }
 
     @Override
-    public void retrieveChore(final RetrieveChoreCallback retrieveChoreCallback) {
+    public Maybe<Chore> retrieveLastChore() {
 
-        ValueEventListener choreListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Chore chore = dataSnapshot.getValue(Chore.class);
-                retrieveChoreCallback.onRetrieved(chore);
-            }
+       return RxFirebaseDatabase.observeSingleValueEvent(mUserReference.child(AppConstants.CHORES_KEY).orderByKey().limitToLast(1), new Function<DataSnapshot, Chore>() {
+           @Override
+           public Chore apply(@io.reactivex.annotations.NonNull DataSnapshot dataSnapshot) throws Exception {
+               DataSnapshot ds = dataSnapshot.getChildren().iterator().next();
+               Chore chore= ds.getValue(Chore.class);
+               return chore;
+           }
+       });
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                retrieveChoreCallback.onError(new Exception(databaseError.getMessage()));
-                //TODO error handling
-            }
-        };
-        mUserReference.child(AppConstants.CHORES_KEY).child("1").addListenerForSingleValueEvent(choreListener);
     }
 
     @Override

@@ -21,8 +21,10 @@ import il.ac.pddailycogresearch.pddailycog.data.DataManager;
 import il.ac.pddailycogresearch.pddailycog.data.model.Chore;
 import il.ac.pddailycogresearch.pddailycog.ui.base.BasePresenter;
 import il.ac.pddailycogresearch.pddailycog.utils.rx.SchedulerProvider;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
-
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 
 /**
@@ -44,8 +46,28 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
 
     @Override
     public void onViewInitialized() {
+        retrieveChore();
     //    Chore currentChore = getDataManager().getCurrentChore();
     //    getMvpView().replaceBodyViews(currentChore.getCurrentPartNum().ordinal());
+    }
+
+    private void retrieveChore() {
+        getDataManager().retrieveChore().doOnSubscribe(
+                new Consumer<Disposable>() {
+                    @Override
+                    public void accept(@NonNull Disposable disposable) throws Exception {
+                        getMvpView().showLoading();
+                    }
+                }
+        ).subscribe(
+                new Consumer<Chore>() {
+                    @Override
+                    public void accept(@NonNull Chore chore) throws Exception {
+                        getMvpView().hideLoading();
+                        getMvpView().showMessage("get! chore num: "+chore.getChoreNum());
+                    }
+                }
+        );
     }
 
     @Override
@@ -69,7 +91,7 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
 
     @Override
     public void foo() {
-        int i = 9/0;
+        retrieveChore();
     }
 
     private void finishChore() {

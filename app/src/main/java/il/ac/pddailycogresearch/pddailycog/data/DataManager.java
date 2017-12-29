@@ -3,6 +3,7 @@ package il.ac.pddailycogresearch.pddailycog.data;
 import javax.inject.Singleton;
 
 import il.ac.pddailycogresearch.pddailycog.data.model.Chore;
+import io.reactivex.Maybe;
 
 /**
  * Created by janisharali on 25/12/16.
@@ -23,6 +24,8 @@ public interface DataManager {
     boolean isUserLogged();
 
     void userLoggedInitialization();
+
+    Maybe<Chore> retrieveChore();
 
     //TODO retrieve chore, see how its needed...
 

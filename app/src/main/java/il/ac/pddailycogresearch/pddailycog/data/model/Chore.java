@@ -19,6 +19,16 @@ public class Chore implements Serializable {
         }
     }
 
+    public Boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(Boolean completed) {
+        this.completed = completed;
+    }
+
+    private Boolean completed;
+
     private Integer choreNum;
 
     public Integer getCurrentPartNum() {

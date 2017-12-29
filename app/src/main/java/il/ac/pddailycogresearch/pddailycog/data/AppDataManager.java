@@ -4,6 +4,9 @@ import android.content.Context;
 
 import il.ac.pddailycogresearch.pddailycog.data.model.Chore;
 import il.ac.pddailycogresearch.pddailycog.di.ApplicationContext;
+import io.reactivex.Maybe;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Function;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -33,31 +36,29 @@ public class AppDataManager implements DataManager {
 
     public void userLoggedInitialization() {
         mDbHelper.initializeDatabase();
-        initializeChore();
+       // initializeChore();
     }
 
-    private void initializeChore() {
-        mDbHelper.retrieveChore(new DbHelper.RetrieveChoreCallback() {
-            @Override
-            public void onRetrieved(Chore retrievedChore) {
-                if (retrievedChore != null)
-                    currentChore = retrievedChore;
-                else {
-                    currentChore = new Chore();
-                    currentChore.setChoreNum(1);
-                   // currentChore.setCurrentPartNum(Chore.ChoreParts.INSTRUCTION);
-                    currentChore.setCurrentPartNum(0);
+    @Override
+    public Maybe<Chore> retrieveChore() {
+        return mDbHelper.retrieveLastChore().map(
+                new Function<Chore, Chore>() {
+                    @Override
+                    public Chore apply(@NonNull Chore chore) throws Exception {
+                        return  setCurrentChore(chore);
+                    }
                 }
-            }
-
-            @Override
-            public void onError(Exception exception) {
-                //TODO error handling
-
-            }
-        });
-
+                );
     }
+
+    private Chore setCurrentChore(Chore lastChore) {
+        if(lastChore.isCompleted())
+            currentChore=new Chore();//TODO decide what do hear
+        else
+            currentChore=lastChore;
+        return currentChore;
+    }
+
 
     public String getCurrentUserDisplayName()
     {
@@ -70,7 +71,7 @@ public class AppDataManager implements DataManager {
 
     @Override
     public Chore getCurrentChore() {
-        return currentChore;
+        return currentChore; //TODO what if null?
     }
 
     @Override

@@ -2,6 +2,7 @@ package il.ac.pddailycogresearch.pddailycog.data;
 
 
 import il.ac.pddailycogresearch.pddailycog.data.model.Chore;
+import io.reactivex.Maybe;
 
 /**
  * Created by שני on 08/11/2017.
@@ -16,11 +17,6 @@ public interface DbHelper {
         void onLoginFailure(Exception exception);//TODO error handling
     }
 
-    interface RetrieveChoreCallback {
-        void onRetrieved(Chore retrievedChore);
-        void onError(Exception exception); //TODO error handling
-    }
-
     void initializeDatabase();
 
     boolean isUserLogged();
@@ -31,7 +27,7 @@ public interface DbHelper {
 
     void login(String email, String password, final DbLoginListener dbLoginListener);
 
-    void retrieveChore(final RetrieveChoreCallback retrieveChoreCallback);
+    Maybe<Chore> retrieveLastChore();
 
     void saveChore(Chore chore);
 }
