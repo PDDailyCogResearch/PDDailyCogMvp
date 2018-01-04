@@ -91,6 +91,7 @@ public class ChoreActivity extends BaseActivity implements ChoreMvpView {
             case R.id.chore_exit_btn:
                 break;
             case R.id.chore_instruction_btn:
+                mPresenter.fa();
                 break;
             case R.id.chore_help_btn:
                 mPresenter.foo();

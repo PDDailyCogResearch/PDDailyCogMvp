@@ -30,6 +30,8 @@ public final class AppConstants {
     public static final String USERS_KEY = "users";
     public static final String PREF_NAME = "mindorks_pref";
 
+    public static final long CHORES_AMOUNT = 3;
+
     public static final long NULL_INDEX = -1L;
 
     public static final String SEED_DATABASE_OPTIONS = "seed/options.json";

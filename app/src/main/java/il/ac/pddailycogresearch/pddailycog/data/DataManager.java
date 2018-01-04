@@ -17,9 +17,7 @@ public interface DataManager {
 
     Maybe<Boolean> login(String email, String password, DbHelper.DbLoginListener dbLoginListener);
 
-    Chore getCurrentChore();
-
-    void saveCurrentChore();
+    void saveChore(Chore chore);
 
     boolean isUserLogged();
 

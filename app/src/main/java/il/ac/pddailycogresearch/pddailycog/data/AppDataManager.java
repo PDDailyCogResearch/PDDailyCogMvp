@@ -20,10 +20,6 @@ public class AppDataManager implements DataManager {
 
     private Context mContext;
     private DbHelper mDbHelper;
-    /**
-     * in-memory chore. if adding more than one type of chore, move to new memory manager
-     */
-    private Chore currentChore;
 
     @Inject
     public AppDataManager(@ApplicationContext Context context,
@@ -34,29 +30,13 @@ public class AppDataManager implements DataManager {
 
     @Override
     public Maybe<Chore> retrieveChore() {
-        return mDbHelper.retrieveLastChore().map(
-                new Function<Chore, Chore>() {
-                    @Override
-                    public Chore apply(@NonNull Chore chore) throws Exception {
-                        return  setCurrentChore(chore);
-                    }
-                }
-                );
+        return mDbHelper.retrieveLastChore();
     }
 
     @Override
     public void logout() {
         mDbHelper.logout();
     }
-
-    private Chore setCurrentChore(Chore lastChore) {
-        if(lastChore.isCompleted())
-            currentChore=new Chore();//TODO decide what do hear
-        else
-            currentChore=lastChore;
-        return currentChore;
-    }
-
 
     public String getCurrentUserDisplayName()
     {
@@ -68,13 +48,8 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Chore getCurrentChore() {
-        return currentChore; //TODO what if null?
-    }
-
-    @Override
-    public void saveCurrentChore() {
-        mDbHelper.saveChore(currentChore);
+    public void saveChore(Chore chore) {
+        mDbHelper.saveChore(chore);
     }
 
     @Override

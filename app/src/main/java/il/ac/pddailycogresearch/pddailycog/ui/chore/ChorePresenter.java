@@ -17,9 +17,11 @@ package il.ac.pddailycogresearch.pddailycog.ui.chore;
 
 import javax.inject.Inject;
 
+import il.ac.pddailycogresearch.pddailycog.R;
 import il.ac.pddailycogresearch.pddailycog.data.DataManager;
 import il.ac.pddailycogresearch.pddailycog.data.model.Chore;
 import il.ac.pddailycogresearch.pddailycog.ui.base.BasePresenter;
+import il.ac.pddailycogresearch.pddailycog.utils.AppConstants;
 import il.ac.pddailycogresearch.pddailycog.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
@@ -49,7 +51,7 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
     public void onViewInitialized() {
         retrieveChore();
     //    Chore currentChore = getDataManager().getCurrentChore();
-    //    getMvpView().replaceBodyViews(currentChore.getCurrentPartNum().ordinal());
+    //    getMvpView().replaceBodyViews(currentChore.getCurrentPart().ordinal());
     }
 
     private void retrieveChore() {
@@ -74,35 +76,49 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
 
     private void updateCurrentChore(Chore chore) {
         if(chore.isCompleted()){
-            currentChore = new Chore();//TODO
+            int nextChore = chore.getChoreNum()+1;
+            if(nextChore<= AppConstants.CHORES_AMOUNT)
+                currentChore = new Chore(nextChore);
+            else
+                getMvpView().onError(R.string.no_more_chores);
         }
+        else
+            currentChore = chore;
         viewCurrentPart();
     }
 
     private void viewCurrentPart() {
-//        getMvpView().replaceBodyViews(currentChore.getCurrentPartNum());
+        int currentViewIdx = currentChore.getCurrentPartNum()-1;
+        getMvpView().replaceBodyViews(currentViewIdx);
     }
 
     @Override
     public void onNextClick() {
-       /* int nextPart =  getDataManager().getCurrentChore().getCurrentPartNum()+1;
-        if (nextPart <=3) {
-            getDataManager().getCurrentChore().setCurrentPartNum(nextPart);
-            getMvpView().replaceBodyViews(nextPart);
+        int nextPart =  currentChore.getCurrentPartNum()+1;
+        if (nextPart <=Chore.PartsConstants.PARTS_AMOUNT) {
+            currentChore.setCurrentPartNum(nextPart);
+            viewCurrentPart();
         }
         else
-            finishChore();*/
+            finishChore();
 
     }
 
     @Override
     public void foo() {
-        getDataManager().retrieveChore();
+       retrieveChore();
+    }
+
+    @Override
+    public void fa() {
+        Chore dummy = new Chore(3);
+        dummy.setCurrentPartNum(4);
+        getDataManager().saveChore(dummy);
     }
 
     private void finishChore() {
         //TODO UI
-        getDataManager().saveCurrentChore();
+        getDataManager().saveChore(currentChore);
     }
 
 }

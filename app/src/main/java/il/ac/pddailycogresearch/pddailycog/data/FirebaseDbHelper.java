@@ -45,6 +45,7 @@ public class FirebaseDbHelper implements DbHelper {
     private void initializeUserRef() {
         if( mAuth.getCurrentUser() != null) {
             mUserReference = FirebaseDatabase.getInstance().getReference(AppConstants.USERS_KEY).child(getCurrentUserUid());
+            mUserReference.keepSynced(true);//because persistence is enable, need to make sure the data is synced with database
         }
     }
 
