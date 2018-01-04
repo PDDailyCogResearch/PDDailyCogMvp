@@ -27,6 +27,7 @@ public final class AppConstants {
     public static final int API_STATUS_CODE_LOCAL_ERROR = 0;
 
     public static final String CHORES_KEY = "chores";
+    public static final String USERS_KEY = "users";
     public static final String PREF_NAME = "mindorks_pref";
 
     public static final long NULL_INDEX = -1L;

@@ -23,8 +23,6 @@ public interface DataManager {
 
     boolean isUserLogged();
 
-    void userLoggedInitialization();
-
     Maybe<Chore> retrieveChore();
 
     void logout();

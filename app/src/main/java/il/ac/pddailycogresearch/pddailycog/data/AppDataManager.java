@@ -30,13 +30,6 @@ public class AppDataManager implements DataManager {
                        DbHelper dbHelper) {
         mContext = context;
         mDbHelper = dbHelper;
-        if (mDbHelper.isUserLogged())
-            userLoggedInitialization();
-    }
-
-    public void userLoggedInitialization() {
-        mDbHelper.initializeDatabase();
-       // initializeChore();
     }
 
     @Override

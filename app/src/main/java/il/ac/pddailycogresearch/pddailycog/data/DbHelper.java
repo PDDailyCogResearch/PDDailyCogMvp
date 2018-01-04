@@ -17,8 +17,6 @@ public interface DbHelper {
         void onLoginFailure(Exception exception);//TODO error handling
     }
 
-    void initializeDatabase();
-
     boolean isUserLogged();
 
     String getCurrentUserDisplayName();

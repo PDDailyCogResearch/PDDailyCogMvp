@@ -38,11 +38,14 @@ public class FirebaseDbHelper implements DbHelper {
     @Inject
     public FirebaseDbHelper(@ApplicationContext Context context) {
         mAuth = FirebaseAuth.getInstance();
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        initializeUserRef();
     }
 
-    @Override
-    public void initializeDatabase() {
-        mUserReference = FirebaseDatabase.getInstance().getReference("users").child(getCurrentUserUid());
+    private void initializeUserRef() {
+        if( mAuth.getCurrentUser() != null) {
+            mUserReference = FirebaseDatabase.getInstance().getReference(AppConstants.USERS_KEY).child(getCurrentUserUid());
+        }
     }
 
     @Override
@@ -65,6 +68,7 @@ public class FirebaseDbHelper implements DbHelper {
                  new Function<AuthResult, Boolean>() {
                      @Override
                      public Boolean apply(@io.reactivex.annotations.NonNull AuthResult authResult) throws Exception {
+                         initializeUserRef();
                          return authResult.getUser()!=null;
                      }
                  }
