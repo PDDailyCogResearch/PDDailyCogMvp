@@ -18,18 +18,31 @@ public class Chore implements Serializable {
                 return null;
         }
     }
-
-    public Boolean isCompleted() {
-        return completed;
+    public Chore() {
+        // Default constructor required for calls to DataSnapshot.getValue(User.class) - Firebase requirement
     }
+    private Boolean completed;
 
     public void setCompleted(Boolean completed) {
         this.completed = completed;
     }
 
-    private Boolean completed;
+    public Boolean isCompleted() {
+        return completed;
+    }
 
     private Integer choreNum;
+
+    public void setChoreNum(Integer choreNum) {
+        this.choreNum = choreNum;
+    }
+
+    public Integer getChoreNum() {
+        return choreNum;
+    }
+
+
+/*    private Integer currentPartNum;
 
     public Integer getCurrentPartNum() {
         return currentPartNum;
@@ -37,28 +50,16 @@ public class Chore implements Serializable {
 
     public void setCurrentPartNum(Integer currentPartNum) {
         this.currentPartNum = currentPartNum;
-    }
+    }*/
 
-    private Integer currentPartNum;
- //   private ChoreParts currentPartNum;
 
-    public Chore() {
-        // Default constructor required for calls to DataSnapshot.getValue(User.class) - Firebase requirement
-    }
+    private ChoreParts currentPartNum;
 
-    public Integer getChoreNum() {
-        return choreNum;
-    }
-
-    public void setChoreNum(Integer choreNum) {
-        this.choreNum = choreNum;
-    }
-
-/*    public ChoreParts getCurrentPartNum() {
+    public ChoreParts getCurrentPartNum() {
         return currentPartNum;
     }
 
     public void setCurrentPartNum(ChoreParts currentPartNum) {
         this.currentPartNum = currentPartNum;
-    }*/
+    }
 }

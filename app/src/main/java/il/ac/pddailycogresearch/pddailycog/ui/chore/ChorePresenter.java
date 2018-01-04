@@ -35,6 +35,7 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
         implements ChoreMvpPresenter<V> {
 
     private static final String TAG = "ChorePresenter";
+    private Chore currentChore;
 
     @Inject
     public ChorePresenter(DataManager dataManager,
@@ -63,6 +64,7 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
                 new Consumer<Chore>() {
                     @Override
                     public void accept(@NonNull Chore chore) throws Exception {
+                        updateCurrentChore(chore);
                         getMvpView().hideLoading();
                         getMvpView().showMessage("get! chore num: "+chore.getChoreNum());
                     }
@@ -70,32 +72,37 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
         );
     }
 
+    private void updateCurrentChore(Chore chore) {
+        if(chore.isCompleted()){
+            currentChore = new Chore();//TODO
+        }
+        viewCurrentPart();
+    }
+
+    private void viewCurrentPart() {
+//        getMvpView().replaceBodyViews(currentChore.getCurrentPartNum());
+    }
+
     @Override
     public void onNextClick() {
-       /* Chore.ChoreParts nextPart =  getDataManager().getCurrentChore().getCurrentPartNum().next();
-        if (nextPart != null) {
-            getDataManager().getCurrentChore().setCurrentPartNum(nextPart);
-            getMvpView().replaceBodyViews(nextPart.ordinal());
-        }
-        else
-            finishChore();*/
-        int nextPart =  getDataManager().getCurrentChore().getCurrentPartNum()+1;
+       /* int nextPart =  getDataManager().getCurrentChore().getCurrentPartNum()+1;
         if (nextPart <=3) {
             getDataManager().getCurrentChore().setCurrentPartNum(nextPart);
             getMvpView().replaceBodyViews(nextPart);
         }
         else
-            finishChore();
+            finishChore();*/
 
     }
 
     @Override
     public void foo() {
-        getDataManager().logout();
+        getDataManager().retrieveChore();
     }
 
     private void finishChore() {
         //TODO UI
         getDataManager().saveCurrentChore();
     }
+
 }
