@@ -15,6 +15,8 @@
 
 package il.ac.pddailycogresearch.pddailycog.ui.chore;
 
+import android.net.Uri;
+
 import javax.inject.Inject;
 
 import il.ac.pddailycogresearch.pddailycog.R;
@@ -97,8 +99,22 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
             isInstrcClicked=false;
             viewCurrentPart();
         }
-        else
+        else {
+            completePart();
             moveToNextPart();
+        }
+    }
+
+    private void completePart() {
+        switch (currentChore.getCurrentPartNum()) {
+            case Chore.PartsConstants.TAKE_PICTURE:
+                saveImage(getMvpView().getImgUri());
+                break;
+            case Chore.PartsConstants.TEXT_INPUT:
+                currentChore.setResultText(getMvpView().getInputText());
+                break;
+        }
+
     }
 
     private void moveToNextPart() {
@@ -113,7 +129,18 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
 
     @Override
     public void foo() {
-       retrieveChore();
+        //saveImage();
+    }
+
+    private void saveImage(Uri imageUri) {
+        getDataManager().saveImage(imageUri).subscribe(
+                new Consumer<Uri>() {
+                    @Override
+                    public void accept(@NonNull Uri uri) throws Exception {
+                        currentChore.setResultImg(uri.toString());
+                    }
+                }
+        );
     }
 
     @Override

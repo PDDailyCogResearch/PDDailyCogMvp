@@ -7,14 +7,15 @@ import java.io.Serializable;
  */
 
 public class Chore implements Serializable {
-    public static class PartsConstants {
-        public static Integer INSTRUCTION = 1;
-        public static Integer TAKE_PICTURE = 2;
-        public static Integer CHECK_PICTURE = 3;
-        public static Integer TEXT_INPUT = 4;
+    public static final class PartsConstants {
+        public static final int INSTRUCTION = 1;
+        public static final int TAKE_PICTURE = 2;
+        public static final int CHECK_PICTURE = 3;
+        public static final int TEXT_INPUT = 4;
 
-        public static Integer PARTS_AMOUNT = 4;
+        public static final int PARTS_AMOUNT = 4;
     }
+
     public Chore() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class) - Firebase requirement
     }
@@ -33,6 +34,13 @@ public class Chore implements Serializable {
     private Integer currentPartNum;
 
     private Integer instrcClicksNum;
+
+    private String resultImg;
+
+
+
+    private String resultText;
+
 
     public void setCompleted(Boolean completed) {
         this.completed = completed;
@@ -72,6 +80,22 @@ public class Chore implements Serializable {
 
     public void increaseInstrcClicksNum() {
         this.instrcClicksNum++;
+    }
+
+    public String getResultImg() {
+        return resultImg;
+    }
+
+    public void setResultImg(String resultImg) {
+        this.resultImg = resultImg;
+    }
+
+    public String getResultText() {
+        return resultText;
+    }
+
+    public void setResultText(String resultText) {
+        this.resultText = resultText;
     }
 
 }

@@ -1,6 +1,8 @@
 package il.ac.pddailycogresearch.pddailycog.data;
 
 
+import android.net.Uri;
+
 import il.ac.pddailycogresearch.pddailycog.data.model.Chore;
 import io.reactivex.Maybe;
 
@@ -28,6 +30,8 @@ public interface DbHelper {
     Maybe<Chore> retrieveLastChore();
 
     void saveChore(Chore chore);
+
+    Maybe<Uri> saveImage(Uri image);
 
     void logout();
 }

@@ -15,6 +15,8 @@
 
 package il.ac.pddailycogresearch.pddailycog.ui.chore;
 
+import android.net.Uri;
+
 import il.ac.pddailycogresearch.pddailycog.ui.base.MvpView;
 
 /**
@@ -25,4 +27,8 @@ public interface ChoreMvpView extends MvpView {
 
 
     void replaceBodyViews(int viewIdx);
+
+    Uri getImgUri();
+
+    String getInputText();
 }

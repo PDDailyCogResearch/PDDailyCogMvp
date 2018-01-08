@@ -1,6 +1,7 @@
 package il.ac.pddailycogresearch.pddailycog.data;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -12,12 +13,16 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import durdinapps.rxfirebase2.RxFirebaseAuth;
 import durdinapps.rxfirebase2.RxFirebaseDatabase;
+import durdinapps.rxfirebase2.RxFirebaseStorage;
 import il.ac.pddailycogresearch.pddailycog.data.model.Chore;
 import il.ac.pddailycogresearch.pddailycog.di.ApplicationContext;
 import il.ac.pddailycogresearch.pddailycog.utils.AppConstants;
@@ -32,7 +37,7 @@ import io.reactivex.functions.Function;
 public class FirebaseDbHelper implements DbHelper {
     private FirebaseAuth mAuth;
     private DatabaseReference mUserReference; //TODO deal with null when not logged in - just to be safe
-
+    private StorageReference mStorageReference;
 
     //TODO find something that really need injection. or change in module to "return new fire..."
     @Inject
@@ -46,6 +51,7 @@ public class FirebaseDbHelper implements DbHelper {
         if( mAuth.getCurrentUser() != null) {
             mUserReference = FirebaseDatabase.getInstance().getReference(AppConstants.USERS_KEY).child(getCurrentUserUid());
             mUserReference.keepSynced(true);//because persistence is enable, need to make sure the data is synced with database
+            mStorageReference=FirebaseStorage.getInstance().getReference().child(getCurrentUserUid());
         }
     }
 
@@ -95,6 +101,17 @@ public class FirebaseDbHelper implements DbHelper {
         mUserReference.child(AppConstants.CHORES_KEY)
                 .child(String.valueOf(chore.getChoreNum())).setValue(chore);
 
+    }
+
+    public Maybe<Uri> saveImage(Uri image) {
+       return RxFirebaseStorage.putFile(mStorageReference.child(image.getLastPathSegment()),image).map(
+                new Function<UploadTask.TaskSnapshot, Uri>() {
+                    @Override
+                    public Uri apply(@io.reactivex.annotations.NonNull UploadTask.TaskSnapshot taskSnapshot) throws Exception {
+                        return taskSnapshot.getDownloadUrl();
+                    }
+                }
+        );
     }
 
     @Override

@@ -1,5 +1,7 @@
 package il.ac.pddailycogresearch.pddailycog.data;
 
+import android.net.Uri;
+
 import javax.inject.Singleton;
 
 import il.ac.pddailycogresearch.pddailycog.data.model.Chore;
@@ -24,6 +26,8 @@ public interface DataManager {
     Maybe<Chore> retrieveChore();
 
     void logout();
+
+    Maybe<Uri> saveImage(Uri image);
 
     //TODO retrieve chore, see how its needed...
 

@@ -1,12 +1,11 @@
 package il.ac.pddailycogresearch.pddailycog.data;
 
 import android.content.Context;
+import android.net.Uri;
 
 import il.ac.pddailycogresearch.pddailycog.data.model.Chore;
 import il.ac.pddailycogresearch.pddailycog.di.ApplicationContext;
 import io.reactivex.Maybe;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Function;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -36,6 +35,11 @@ public class AppDataManager implements DataManager {
     @Override
     public void logout() {
         mDbHelper.logout();
+    }
+
+    @Override
+    public Maybe<Uri> saveImage(Uri image) {
+       return mDbHelper.saveImage(image);
     }
 
     public String getCurrentUserDisplayName()

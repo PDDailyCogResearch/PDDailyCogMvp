@@ -23,6 +23,8 @@ public final class AppConstants {
 
     public static final String STATUS_CODE_SUCCESS = "success";
     public static final String STATUS_CODE_FAILED = "failed";
+    public static final String PACKAGE_NAME = "il.ac.pddailycogresearch.pddailycog";
+
 
     public static final int API_STATUS_CODE_LOCAL_ERROR = 0;
 
