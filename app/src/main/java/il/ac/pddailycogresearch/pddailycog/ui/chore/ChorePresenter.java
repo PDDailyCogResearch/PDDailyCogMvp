@@ -38,6 +38,7 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
 
     private static final String TAG = "ChorePresenter";
     private Chore currentChore;
+    private Boolean isInstrcClicked=false;
 
     @Inject
     public ChorePresenter(DataManager dataManager,
@@ -50,8 +51,6 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
     @Override
     public void onViewInitialized() {
         retrieveChore();
-    //    Chore currentChore = getDataManager().getCurrentChore();
-    //    getMvpView().replaceBodyViews(currentChore.getCurrentPart().ordinal());
     }
 
     private void retrieveChore() {
@@ -83,7 +82,7 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
                 getMvpView().onError(R.string.no_more_chores);
         }
         else
-            currentChore = chore;
+            this.currentChore = chore;
         viewCurrentPart();
     }
 
@@ -94,14 +93,22 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
 
     @Override
     public void onNextClick() {
+        if(isInstrcClicked) {
+            isInstrcClicked=false;
+            viewCurrentPart();
+        }
+        else
+            moveToNextPart();
+    }
+
+    private void moveToNextPart() {
         int nextPart =  currentChore.getCurrentPartNum()+1;
-        if (nextPart <=Chore.PartsConstants.PARTS_AMOUNT) {
+        if (nextPart <= Chore.PartsConstants.PARTS_AMOUNT) {
             currentChore.setCurrentPartNum(nextPart);
             viewCurrentPart();
         }
         else
             finishChore();
-
     }
 
     @Override
@@ -110,10 +117,10 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
     }
 
     @Override
-    public void fa() {
-        Chore dummy = new Chore(3);
-        dummy.setCurrentPartNum(4);
-        getDataManager().saveChore(dummy);
+    public void onInstructionBtnClick() {
+        currentChore.increaseInstrcClicksNum();
+        isInstrcClicked=true;
+        getMvpView().replaceBodyViews(Chore.PartsConstants.INSTRUCTION-1);
     }
 
     private void finishChore() {

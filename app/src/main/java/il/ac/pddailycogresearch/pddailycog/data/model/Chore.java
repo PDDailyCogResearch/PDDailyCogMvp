@@ -1,7 +1,5 @@
 package il.ac.pddailycogresearch.pddailycog.data.model;
 
-import com.google.firebase.database.Exclude;
-
 import java.io.Serializable;
 
 /**
@@ -25,9 +23,16 @@ public class Chore implements Serializable {
         this.choreNum = choreNum;
         this.currentPartNum=1;
         this.completed = false;
+        this.instrcClicksNum = 0;
     }
 
     private Boolean completed;
+
+    private Integer choreNum;
+
+    private Integer currentPartNum;
+
+    private Integer instrcClicksNum;
 
     public void setCompleted(Boolean completed) {
         this.completed = completed;
@@ -37,7 +42,7 @@ public class Chore implements Serializable {
         return completed;
     }
 
-    private Integer choreNum;
+
 
     public void setChoreNum(Integer choreNum) {
         this.choreNum = choreNum;
@@ -47,7 +52,7 @@ public class Chore implements Serializable {
         return choreNum;
     }
 
-    private Integer currentPartNum;
+
 
     public Integer getCurrentPartNum() {
         return currentPartNum;
@@ -55,6 +60,18 @@ public class Chore implements Serializable {
 
     public void setCurrentPartNum(Integer currentPartNum) {
         this.currentPartNum = currentPartNum;
+    }
+
+    public Integer getInstrcClicksNum() {
+        return instrcClicksNum;
+    }
+
+    public void setInstrcClicksNum(Integer instrcClicksNum) {
+        this.instrcClicksNum = instrcClicksNum;
+    }
+
+    public void increaseInstrcClicksNum() {
+        this.instrcClicksNum++;
     }
 
 }

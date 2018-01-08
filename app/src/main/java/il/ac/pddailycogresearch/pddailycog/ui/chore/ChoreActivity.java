@@ -19,7 +19,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import il.ac.pddailycogresearch.pddailycog.R;
 import il.ac.pddailycogresearch.pddailycog.ui.base.BaseActivity;
-import il.ac.pddailycogresearch.pddailycog.ui.login.LoginActivity;
 import il.ac.pddailycogresearch.pddailycog.utils.ViewGroupUtils;
 
 public class ChoreActivity extends BaseActivity implements ChoreMvpView {
@@ -91,7 +90,7 @@ public class ChoreActivity extends BaseActivity implements ChoreMvpView {
             case R.id.chore_exit_btn:
                 break;
             case R.id.chore_instruction_btn:
-                mPresenter.fa();
+                mPresenter.onInstructionBtnClick();
                 break;
             case R.id.chore_help_btn:
                 mPresenter.foo();
