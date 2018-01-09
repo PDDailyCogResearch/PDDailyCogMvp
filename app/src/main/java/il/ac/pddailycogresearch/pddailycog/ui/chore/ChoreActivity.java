@@ -45,9 +45,12 @@ public class ChoreActivity extends BaseActivity implements ChoreMvpView {
     Button choreExitBtn;
     @BindView(R.id.chore_instruction_btn)
     Button choreInstructionBtn;
+    @BindView(R.id.take_picture_btn)
+    Button takePictureBtn;
 
     View currentBodyView;
     ArrayList<View> bodyViews = new ArrayList<>();
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,9 +76,6 @@ public class ChoreActivity extends BaseActivity implements ChoreMvpView {
     private void initilizeBodyViews() {
         currentBodyView = choreInstructionTextview;
         bodyViews.add(choreInstructionTextview);
-        ImageView imageView = new ImageView(this);
-        imageView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1080));
-        bodyViews.add(imageView);
         bodyViews.add(new ImageView(this));
         bodyViews.add(new EditText(this));
     }
@@ -91,7 +91,7 @@ public class ChoreActivity extends BaseActivity implements ChoreMvpView {
         mPresenter.onViewInitialized();
     }
 
-    @OnClick({R.id.chore_exit_btn, R.id.chore_instruction_btn, R.id.chore_help_btn, R.id.chore_next_btn})
+    @OnClick({R.id.chore_exit_btn, R.id.chore_instruction_btn, R.id.chore_help_btn, R.id.chore_next_btn,R.id.take_picture_btn})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.chore_exit_btn:
@@ -100,27 +100,44 @@ public class ChoreActivity extends BaseActivity implements ChoreMvpView {
                 mPresenter.onInstructionBtnClick();
                 break;
             case R.id.chore_help_btn:
-                dispatchTakePictureIntent();
+                mPresenter.foo();
                 break;
             case R.id.chore_next_btn:
                 mPresenter.onNextClick();
+                break;
+            case R.id.take_picture_btn:
+                mPresenter.onTakePictureClick();
                 break;
         }
     }
 
     @Override
     public void replaceBodyViews(int viewIdx) {
-        ViewGroupUtils.replaceViewInLinearLayout(currentBodyView,bodyViews.get(viewIdx));
+        choreHeadlineTextview.setText(getResources().getStringArray(R.array.chore_headers)[viewIdx]);
+        ViewGroupUtils.replaceViewInLinearLayout(currentBodyView, bodyViews.get(viewIdx));
+        if (viewIdx == Chore.PartsConstants.TAKE_PICTURE - 1) {
+            takePictureBtn.setVisibility(View.VISIBLE);
+            if(imgUri==null)
+               choreNextBtn.setEnabled(false);
+        }
+        else
+            takePictureBtn.setVisibility(View.GONE);
         currentBodyView = bodyViews.get(viewIdx);
+    }
+
+    @Override
+    public void setChoreInstruction(Integer choreNum) {
+       choreInstructionTextview.setText(getResources().getStringArray(R.array.chore_instructions)[choreNum-1]);
     }
 
 
     @Override
     public String getInputText() {
         //TODO refactor somehow, the usage in presenter too
-        EditText editText = (EditText)bodyViews.get(Chore.PartsConstants.TEXT_INPUT-1);
+        EditText editText = (EditText) bodyViews.get(Chore.PartsConstants.TEXT_INPUT - 1);
         return String.valueOf(editText.getText());
     }
+
     //region take pictures, should be refactored
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private String imgAbsolutePath;
@@ -131,24 +148,26 @@ public class ChoreActivity extends BaseActivity implements ChoreMvpView {
         return imgUri;
     }
 
-    private void dispatchTakePictureIntent() {
+    @Override
+    public void dispatchTakePictureIntent() {
         Intent takePictureIntent = ImageUtils.createTakePictureIntent(this);
         imgAbsolutePath = takePictureIntent.getStringExtra(ImageUtils.IMAGE_ABSOLUTE_PATH);
         Bundle extras = takePictureIntent.getExtras();
-        imgUri=(Uri) extras.get(MediaStore.EXTRA_OUTPUT);
+        imgUri = (Uri) extras.get(MediaStore.EXTRA_OUTPUT);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            ImageView imageView = (ImageView) bodyViews.get(Chore.PartsConstants.TAKE_PICTURE-1);
+            imageView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1080)); //TODO change hard-coded
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK)
-              //  && data != null && data.getData() != null )
-        {
-            ImageUtils.setPic(((ImageView)bodyViews.get(1)),imgAbsolutePath);
-          //  mPresenter.foo(imgUri);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            ImageView imageView = (ImageView) bodyViews.get(Chore.PartsConstants.TAKE_PICTURE-1);
+            ImageUtils.setPic(imageView, imgAbsolutePath);
 
+            choreNextBtn.setEnabled(true);
         }
     }
     //endregion

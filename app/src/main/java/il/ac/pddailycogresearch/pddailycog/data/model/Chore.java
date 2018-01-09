@@ -10,10 +10,9 @@ public class Chore implements Serializable {
     public static final class PartsConstants {
         public static final int INSTRUCTION = 1;
         public static final int TAKE_PICTURE = 2;
-        public static final int CHECK_PICTURE = 3;
-        public static final int TEXT_INPUT = 4;
+        public static final int TEXT_INPUT = 3;
 
-        public static final int PARTS_AMOUNT = 4;
+        public static final int PARTS_AMOUNT = 3;
     }
 
     public Chore() {
@@ -25,6 +24,7 @@ public class Chore implements Serializable {
         this.currentPartNum=1;
         this.completed = false;
         this.instrcClicksNum = 0;
+        this.takePicClickNum=0;
     }
 
     private Boolean completed;
@@ -35,9 +35,9 @@ public class Chore implements Serializable {
 
     private Integer instrcClicksNum;
 
+    private Integer takePicClickNum;
+
     private String resultImg;
-
-
 
     private String resultText;
 
@@ -80,6 +80,18 @@ public class Chore implements Serializable {
 
     public void increaseInstrcClicksNum() {
         this.instrcClicksNum++;
+    }
+
+    public Integer getTakePicClickNum() {
+        return takePicClickNum;
+    }
+
+    public void setTakePicClickNum(Integer takePicClickNum) {
+        this.takePicClickNum = takePicClickNum;
+    }
+
+    public void increaseTakePicClickNum() {
+        this.takePicClickNum++;
     }
 
     public String getResultImg() {

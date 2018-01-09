@@ -85,6 +85,7 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
         }
         else
             this.currentChore = chore;
+        getMvpView().setChoreInstruction(currentChore.getChoreNum());
         viewCurrentPart();
     }
 
@@ -129,10 +130,11 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
 
     @Override
     public void foo() {
-        //saveImage();
+        retrieveChore();
     }
 
     private void saveImage(Uri imageUri) {
+        if(imageUri!=null)
         getDataManager().saveImage(imageUri).subscribe(
                 new Consumer<Uri>() {
                     @Override
@@ -148,6 +150,12 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
         currentChore.increaseInstrcClicksNum();
         isInstrcClicked=true;
         getMvpView().replaceBodyViews(Chore.PartsConstants.INSTRUCTION-1);
+    }
+
+    @Override
+    public void onTakePictureClick() {
+        currentChore.increaseTakePicClickNum();
+        getMvpView().dispatchTakePictureIntent();
     }
 
     private void finishChore() {

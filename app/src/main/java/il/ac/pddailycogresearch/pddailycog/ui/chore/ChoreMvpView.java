@@ -31,4 +31,8 @@ public interface ChoreMvpView extends MvpView {
     Uri getImgUri();
 
     String getInputText();
+
+    void dispatchTakePictureIntent();
+
+    void setChoreInstruction(Integer choreNum);
 }

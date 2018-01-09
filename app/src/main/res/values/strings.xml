@@ -14,5 +14,14 @@
     <string name="invalid_email">Please provide a valid email.</string>
     <string name="empty_password">Please provide a non empty password.</string>
     <string name="login_failed">login failed</string>
+
     <string name="no_more_chores">no more chores</string>
+    <string-array name="chore_headers">
+        <item>Instruction</item>
+        <item>Take Picture</item>
+        <item>Insert Text</item>
+    </string-array>
+    <string-array name="chore_instructions">
+        <item>take your phone, find your key, put it on your bed and shoot a photo. sit there nnd insert time and date and your full name</item>
+    </string-array>
 </resources>
