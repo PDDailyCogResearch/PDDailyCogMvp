@@ -11,7 +11,8 @@
 
     <!--Login Validation-->
     <string name="empty_username">Please provide a non empty username.</string>
-    <string name="empty_password">Please provide a non empty password.</string>
+    <string name="short_password">Password should be at least 6 characters.</string>
+    <string name="no_confirm_password">Please enter your password again for confirmation</string>
     <string name="login_failed">login failed</string>
 
     <string name="no_more_chores">no more chores</string>

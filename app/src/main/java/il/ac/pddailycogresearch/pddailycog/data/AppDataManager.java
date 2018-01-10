@@ -43,6 +43,11 @@ public class AppDataManager implements DataManager {
        return mDbHelper.saveImage(image);
     }
 
+    @Override
+    public boolean isUserCollisionException(Throwable throwable) {
+        return mDbHelper.isUserCollisionException(throwable);
+    }
+
     public String getCurrentUserDisplayName()
     {
         return mDbHelper.getCurrentUserDisplayName();

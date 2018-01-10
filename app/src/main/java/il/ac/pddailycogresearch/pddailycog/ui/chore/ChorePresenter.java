@@ -75,8 +75,8 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
                         getMvpView().hideLoading();
-                        if(throwable.getMessage().equals(AppConstants.HAS_NO_CHORES_MSG))
-                            currentChore=new Chore(1);
+                        if (throwable.getMessage().equals(AppConstants.HAS_NO_CHORES_MSG))
+                            updateCurrentChore(new Chore(1)); //new user, create first chore
                         else
                             getMvpView().onError(throwable.getMessage());
                     }

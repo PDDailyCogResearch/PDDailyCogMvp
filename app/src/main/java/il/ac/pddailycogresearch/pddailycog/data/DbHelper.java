@@ -13,6 +13,8 @@ import io.reactivex.Maybe;
 public interface DbHelper {
 
 
+    boolean isUserCollisionException(Throwable throwable);
+
     interface DbLoginListener {
         void onLoginSuccess(String displayName);
 

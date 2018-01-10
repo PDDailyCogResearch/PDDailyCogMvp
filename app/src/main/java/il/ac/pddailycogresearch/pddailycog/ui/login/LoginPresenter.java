@@ -22,7 +22,6 @@ import com.androidnetworking.error.ANError;*/
 import il.ac.pddailycogresearch.pddailycog.R;
 import il.ac.pddailycogresearch.pddailycog.data.DataManager;
 import il.ac.pddailycogresearch.pddailycog.ui.base.BasePresenter;
-import il.ac.pddailycogresearch.pddailycog.utils.CommonUtils;
 import il.ac.pddailycogresearch.pddailycog.utils.rx.SchedulerProvider;
 
 import javax.inject.Inject;
@@ -55,8 +54,12 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V>
             getMvpView().onError(R.string.empty_username);
             return;
         }
-        if (password == null || password.isEmpty()||confirmPassword==null||confirmPassword.isEmpty()) {
-            getMvpView().onError(R.string.empty_password);
+        if (password == null || password.length()<6) {
+            getMvpView().onError(R.string.short_password);
+            return;
+        }
+        if(confirmPassword==null||confirmPassword.isEmpty()) {
+            getMvpView().onError(R.string.no_confirm_password);
             return;
         }
         if(!password.equals(confirmPassword)){
@@ -87,7 +90,12 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V>
                         new Consumer<Throwable>() {
                             @Override
                             public void accept(@NonNull Throwable throwable) throws Exception {
-                                doLoginWhenSignUpFail(username, password);
+                                if(getDataManager().isUserCollisionException(throwable))
+                                    doLoginWhenSignUpFail(username, password);
+                                else {
+                                    getMvpView().hideLoading();
+                                    getMvpView().onError(throwable.getMessage());
+                                }
                             }
                         }
                 );

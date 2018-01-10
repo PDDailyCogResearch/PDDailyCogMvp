@@ -16,6 +16,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -57,6 +58,11 @@ public class FirebaseDbHelper implements DbHelper {
     }
 
     @Override
+    public boolean isUserCollisionException(Throwable throwable) {
+        return throwable.getClass()==FirebaseAuthUserCollisionException.class;
+    }
+
+    @Override
     public boolean isUserLogged() {
         return mAuth.getCurrentUser()!=null;
     }
@@ -91,6 +97,7 @@ public class FirebaseDbHelper implements DbHelper {
                 new Function<AuthResult, Boolean>() {
                     @Override
                     public Boolean apply(@io.reactivex.annotations.NonNull AuthResult authResult) throws Exception {
+                        initializeUserRef();
                         return authResult.getUser()!=null;
                     }
                 }

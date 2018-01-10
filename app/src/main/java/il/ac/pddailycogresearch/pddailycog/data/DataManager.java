@@ -31,6 +31,8 @@ public interface DataManager {
 
     Maybe<Uri> saveImage(Uri image);
 
+    boolean isUserCollisionException(Throwable throwable);
+
     //TODO retrieve chore, see how its needed...
 
 }
