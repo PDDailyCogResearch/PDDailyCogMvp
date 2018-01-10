@@ -29,6 +29,7 @@ import il.ac.pddailycogresearch.pddailycog.utils.AppConstants;
 import io.reactivex.Maybe;
 import io.reactivex.functions.Function;
 
+
 /**
  * Created by שני on 08/11/2017.
  */
@@ -69,9 +70,10 @@ public class FirebaseDbHelper implements DbHelper {
         return mAuth.getCurrentUser().getUid();
     }
 
-    public Maybe<Boolean> login(String email, String password, final DbLoginListener dbLoginListener) {
-
-        return RxFirebaseAuth.signInWithEmailAndPassword(mAuth, email, password).map(
+    @Override
+    public Maybe<Boolean> login(String username, String password) {
+        username = username+AppConstants.MAIL_SUFFIX;
+        return RxFirebaseAuth.signInWithEmailAndPassword(mAuth, username, password).map(
                  new Function<AuthResult, Boolean>() {
                      @Override
                      public Boolean apply(@io.reactivex.annotations.NonNull AuthResult authResult) throws Exception {
@@ -80,7 +82,22 @@ public class FirebaseDbHelper implements DbHelper {
                      }
                  }
          );
+
     }
+    @Override
+    public Maybe<Boolean> signup(String username, String password){
+        username = username+AppConstants.MAIL_SUFFIX;
+        return RxFirebaseAuth.createUserWithEmailAndPassword(mAuth,username,password).map(
+                new Function<AuthResult, Boolean>() {
+                    @Override
+                    public Boolean apply(@io.reactivex.annotations.NonNull AuthResult authResult) throws Exception {
+                        return authResult.getUser()!=null;
+                    }
+                }
+        );
+
+    }
+
 
     @Override
     public Maybe<Chore> retrieveLastChore() {
@@ -88,9 +105,12 @@ public class FirebaseDbHelper implements DbHelper {
        return RxFirebaseDatabase.observeSingleValueEvent(mUserReference.child(AppConstants.CHORES_KEY).orderByKey().limitToLast(1), new Function<DataSnapshot, Chore>() {
            @Override
            public Chore apply(@io.reactivex.annotations.NonNull DataSnapshot dataSnapshot) throws Exception {
-               DataSnapshot ds = dataSnapshot.getChildren().iterator().next();
-               Chore chore= ds.getValue(Chore.class);
-               return chore;
+               if (dataSnapshot.getChildren().iterator().hasNext()) {
+                   DataSnapshot ds = dataSnapshot.getChildren().iterator().next();
+                   Chore chore= ds.getValue(Chore.class);
+                   return chore;
+               }
+               throw new Exception(AppConstants.HAS_NO_CHORES_MSG);
            }
        });
 

@@ -32,6 +32,7 @@
         android:id="@+id/chore_instruction_textview"
         android:text="temp defualt insttruction"/>
     <Button
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/chore_help_btn"
@@ -42,6 +43,12 @@
         android:id="@+id/take_picture_btn"
         android:text="take pic"
         android:visibility="gone"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/instr_sound_btn"
+        android:text="sound"/>
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

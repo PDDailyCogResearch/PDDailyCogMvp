@@ -69,7 +69,16 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
                     public void accept(@NonNull Chore chore) throws Exception {
                         updateCurrentChore(chore);
                         getMvpView().hideLoading();
-                        getMvpView().showMessage("get! chore num: "+chore.getChoreNum());
+                    }
+                },
+                new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        getMvpView().hideLoading();
+                        if(throwable.getMessage().equals(AppConstants.HAS_NO_CHORES_MSG))
+                            currentChore=new Chore(1);
+                        else
+                            getMvpView().onError(throwable.getMessage());
                     }
                 }
         );
@@ -80,8 +89,11 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
             int nextChore = chore.getChoreNum()+1;
             if(nextChore<= AppConstants.CHORES_AMOUNT)
                 currentChore = new Chore(nextChore);
-            else
+            else {
                 getMvpView().onError(R.string.no_more_chores);
+               // getMvpView().finishView();
+                currentChore=new Chore(1);
+            }
         }
         else
             this.currentChore = chore;
@@ -96,6 +108,7 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
 
     @Override
     public void onNextClick() {
+        getMvpView().hideSoundBtn();
         if(isInstrcClicked) {
             isInstrcClicked=false;
             viewCurrentPart();
@@ -147,9 +160,12 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
 
     @Override
     public void onInstructionBtnClick() {
-        currentChore.increaseInstrcClicksNum();
-        isInstrcClicked=true;
-        getMvpView().replaceBodyViews(Chore.PartsConstants.INSTRUCTION-1);
+        if(currentChore.getCurrentPartNum()!=Chore.PartsConstants.INSTRUCTION) {//ignore press when in instruction
+            currentChore.increaseInstrcClicksNum();
+            isInstrcClicked = true;
+            getMvpView().replaceBodyViews(Chore.PartsConstants.INSTRUCTION - 1);
+            getMvpView().showSoundBtn();
+        }
     }
 
     @Override
@@ -158,9 +174,33 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
         getMvpView().dispatchTakePictureIntent();
     }
 
+    @Override
+    public void onExitClick() {
+        getMvpView().createAlertDialog(R.string.warning_header,R.string.exit_warning_text).subscribe(
+                new Consumer<Boolean>() {
+                    @Override
+                    public void accept(@NonNull Boolean aBoolean) throws Exception {
+                        if(aBoolean){
+                            getDataManager().saveChore(currentChore);
+                            getMvpView().openHomeActivity();
+                        }
+                    }
+                },
+                new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        getMvpView().onError(throwable.getMessage());
+                    }
+                }
+        );
+    }
+
     private void finishChore() {
         //TODO UI
+        currentChore.setCompleted(true);
         getDataManager().saveChore(currentChore);
+        getMvpView().showMessage(R.string.chore_finished);
+        getMvpView().finishView();
     }
 
 }

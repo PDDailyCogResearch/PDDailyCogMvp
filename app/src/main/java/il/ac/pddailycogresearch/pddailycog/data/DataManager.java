@@ -17,7 +17,9 @@ public interface DataManager {
 
     String getCurrentUserDisplayName();
 
-    Maybe<Boolean> login(String email, String password, DbHelper.DbLoginListener dbLoginListener);
+    Maybe<Boolean> login(String username, String password);
+
+    Maybe<Boolean> signup(String username, String password);
 
     void saveChore(Chore chore);
 

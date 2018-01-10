@@ -2,6 +2,7 @@ package il.ac.pddailycogresearch.pddailycog.ui.chore;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -50,6 +51,8 @@ public class ChoreActivity extends BaseActivity implements ChoreMvpView {
 
     View currentBodyView;
     ArrayList<View> bodyViews = new ArrayList<>();
+    @BindView(R.id.instr_sound_btn)
+    Button instrSoundBtn;
 
 
     @Override
@@ -91,15 +94,18 @@ public class ChoreActivity extends BaseActivity implements ChoreMvpView {
         mPresenter.onViewInitialized();
     }
 
-    @OnClick({R.id.chore_exit_btn, R.id.chore_instruction_btn, R.id.chore_help_btn, R.id.chore_next_btn,R.id.take_picture_btn})
+    @OnClick({R.id.chore_exit_btn, R.id.chore_instruction_btn, R.id.chore_help_btn, R.id.chore_next_btn,
+            R.id.take_picture_btn, R.id.instr_sound_btn})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.chore_exit_btn:
+                mPresenter.onExitClick();
                 break;
             case R.id.chore_instruction_btn:
                 mPresenter.onInstructionBtnClick();
                 break;
             case R.id.chore_help_btn:
+                localFoo();
                 mPresenter.foo();
                 break;
             case R.id.chore_next_btn:
@@ -108,8 +114,19 @@ public class ChoreActivity extends BaseActivity implements ChoreMvpView {
             case R.id.take_picture_btn:
                 mPresenter.onTakePictureClick();
                 break;
+            case R.id.instr_sound_btn:
+                localFoo();
+                break;
         }
     }
+
+    private void localFoo() {
+        MediaPlayer mpori;
+
+        mpori= MediaPlayer.create(getApplicationContext(), R.raw.temp_audio_instr);
+        mpori.start();
+    }
+
 
     @Override
     public void replaceBodyViews(int viewIdx) {
@@ -117,17 +134,28 @@ public class ChoreActivity extends BaseActivity implements ChoreMvpView {
         ViewGroupUtils.replaceViewInLinearLayout(currentBodyView, bodyViews.get(viewIdx));
         if (viewIdx == Chore.PartsConstants.TAKE_PICTURE - 1) {
             takePictureBtn.setVisibility(View.VISIBLE);
-            if(imgUri==null)
-               choreNextBtn.setEnabled(false);
-        }
-        else
+            if (imgUri == null)
+                choreNextBtn.setEnabled(false);
+        } else {
             takePictureBtn.setVisibility(View.GONE);
+            choreNextBtn.setEnabled(true);
+        }
         currentBodyView = bodyViews.get(viewIdx);
     }
 
     @Override
     public void setChoreInstruction(Integer choreNum) {
-       choreInstructionTextview.setText(getResources().getStringArray(R.array.chore_instructions)[choreNum-1]);
+        choreInstructionTextview.setText(getResources().getStringArray(R.array.chore_instructions)[choreNum - 1]);
+    }
+
+    @Override
+    public void showSoundBtn() {
+        instrSoundBtn.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideSoundBtn() {
+        instrSoundBtn.setVisibility(View.GONE);
     }
 
 
@@ -155,7 +183,7 @@ public class ChoreActivity extends BaseActivity implements ChoreMvpView {
         Bundle extras = takePictureIntent.getExtras();
         imgUri = (Uri) extras.get(MediaStore.EXTRA_OUTPUT);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            ImageView imageView = (ImageView) bodyViews.get(Chore.PartsConstants.TAKE_PICTURE-1);
+            ImageView imageView = (ImageView) bodyViews.get(Chore.PartsConstants.TAKE_PICTURE - 1);
             imageView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1080)); //TODO change hard-coded
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
@@ -164,7 +192,7 @@ public class ChoreActivity extends BaseActivity implements ChoreMvpView {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            ImageView imageView = (ImageView) bodyViews.get(Chore.PartsConstants.TAKE_PICTURE-1);
+            ImageView imageView = (ImageView) bodyViews.get(Chore.PartsConstants.TAKE_PICTURE - 1);
             ImageUtils.setPic(imageView, imgAbsolutePath);
 
             choreNextBtn.setEnabled(true);

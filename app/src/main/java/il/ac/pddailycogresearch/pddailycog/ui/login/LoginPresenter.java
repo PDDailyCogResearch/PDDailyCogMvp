@@ -21,7 +21,6 @@ import com.androidnetworking.error.ANError;*/
 
 import il.ac.pddailycogresearch.pddailycog.R;
 import il.ac.pddailycogresearch.pddailycog.data.DataManager;
-import il.ac.pddailycogresearch.pddailycog.data.DbHelper;
 import il.ac.pddailycogresearch.pddailycog.ui.base.BasePresenter;
 import il.ac.pddailycogresearch.pddailycog.utils.CommonUtils;
 import il.ac.pddailycogresearch.pddailycog.utils.rx.SchedulerProvider;
@@ -50,36 +49,35 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V>
     }
 
     @Override
-    public void onServerLoginClick(String email, String password) {
+    public void onSignUpClick(final String username, final String password, String confirmPassword) {
         //validate email and password
-        if (email == null || email.isEmpty()) {
-            getMvpView().onError(R.string.empty_email);
+        if (username == null || username.isEmpty()) {
+            getMvpView().onError(R.string.empty_username);
             return;
         }
-        if (!CommonUtils.isEmailValid(email)) {
-            getMvpView().onError(R.string.invalid_email);
-            return;
-        }
-        if (password == null || password.isEmpty()) {
+        if (password == null || password.isEmpty()||confirmPassword==null||confirmPassword.isEmpty()) {
             getMvpView().onError(R.string.empty_password);
             return;
         }
+        if(!password.equals(confirmPassword)){
+            getMvpView().onError(R.string.unmatch_passwords);
+            return;
+        }
 
-        getDataManager().login(email, password, null)
-                .doOnSubscribe(
-                        new Consumer<Disposable>() {
-                            @Override
-                            public void accept(@NonNull Disposable disposable) throws Exception {
-                                getMvpView().showLoading();
-                            }
-                        }
-                )
+        getDataManager().signup(username,password).doOnSubscribe(
+                new Consumer<Disposable>() {
+                    @Override
+                    public void accept(@NonNull Disposable disposable) throws Exception {
+                        getMvpView().showLoading();
+                    }
+                }
+        )
                 .subscribe(
                         new Consumer<Boolean>() {
                             @Override
-                            public void accept(@NonNull Boolean isLogged) throws Exception {
+                            public void accept(@NonNull Boolean isSigned) throws Exception {
                                 getMvpView().hideLoading();
-                                if (isLogged)
+                                if (isSigned)
                                     getMvpView().openMainActivity();
                                 else
                                     getMvpView().onError(R.string.login_failed);
@@ -89,12 +87,36 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V>
                         new Consumer<Throwable>() {
                             @Override
                             public void accept(@NonNull Throwable throwable) throws Exception {
-                                getMvpView().hideLoading();
-                                getMvpView().onError(throwable.getMessage());
+                                doLoginWhenSignUpFail(username, password);
                             }
                         }
                 );
 
+    }
+
+    private void doLoginWhenSignUpFail(String username, String password) {
+        getDataManager().login(username,password).subscribe(
+                new Consumer<Boolean>() {
+                    @Override
+                    public void accept(@NonNull Boolean isLogged) throws Exception {
+                        getMvpView().hideLoading();
+                        if (isLogged) {
+                            getMvpView().showMessage(R.string.logged_in);
+                            getMvpView().openMainActivity();
+                        }
+                        else
+                            getMvpView().onError(R.string.login_failed);
+
+                    }
+                },
+                new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        getMvpView().hideLoading();
+                        getMvpView().onError(throwable.getMessage());
+                    }
+                }
+        );
     }
 
 }

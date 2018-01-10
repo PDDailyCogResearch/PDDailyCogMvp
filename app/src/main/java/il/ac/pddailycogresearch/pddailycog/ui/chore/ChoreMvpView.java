@@ -35,4 +35,7 @@ public interface ChoreMvpView extends MvpView {
     void dispatchTakePictureIntent();
 
     void setChoreInstruction(Integer choreNum);
+
+    void showSoundBtn();
+    void hideSoundBtn();
 }

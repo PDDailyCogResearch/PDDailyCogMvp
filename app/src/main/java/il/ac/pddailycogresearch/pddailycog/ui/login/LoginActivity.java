@@ -18,18 +18,20 @@ package il.ac.pddailycogresearch.pddailycog.ui.login;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
-
-import il.ac.pddailycogresearch.pddailycog.R;
-import il.ac.pddailycogresearch.pddailycog.ui.base.BaseActivity;
-import il.ac.pddailycogresearch.pddailycog.ui.main.MainActivity;
+import android.widget.RelativeLayout;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import il.ac.pddailycogresearch.pddailycog.R;
+import il.ac.pddailycogresearch.pddailycog.ui.base.BaseActivity;
+import il.ac.pddailycogresearch.pddailycog.ui.main.MainActivity;
 
 
 /**
@@ -41,11 +43,17 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
     @Inject
     LoginMvpPresenter<LoginMvpView> mPresenter;
 
-    @BindView(R.id.et_email)
+    @BindView(R.id.et_username)
     EditText mEmailEditText;
 
     @BindView(R.id.et_password)
     EditText mPasswordEditText;
+    @BindView(R.id.con_password)
+    TextInputEditText conPassword;
+    @BindView(R.id.signup_btn)
+    Button btnServerLogin;
+    @BindView(R.id.activity_main)
+    RelativeLayout activityMain;
 
     public static Intent getStartIntent(Context context) {
         Intent intent = new Intent(context, LoginActivity.class);
@@ -64,12 +72,11 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
         mPresenter.onAttach(LoginActivity.this);
     }
 
-    @OnClick(R.id.btn_server_login)
+    @OnClick(R.id.signup_btn)
     void onServerLoginClick(View v) {
-        mPresenter.onServerLoginClick(mEmailEditText.getText().toString(),
-                mPasswordEditText.getText().toString());
+        mPresenter.onSignUpClick(mEmailEditText.getText().toString(),
+                mPasswordEditText.getText().toString(),conPassword.getText().toString());
     }
-
 
 
     @Override
@@ -89,4 +96,5 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
     protected void setUp() {
 
     }
+
 }

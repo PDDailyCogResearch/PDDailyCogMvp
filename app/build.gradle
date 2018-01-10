@@ -45,6 +45,13 @@ dependencies {
     compile "io.reactivex.rxjava2:rxjava:$rootProject.rxjava2Version"
     compile "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroidVersion"
 
+    //reactive views
+    compile "com.jakewharton.rxbinding2:rxbinding:$rootProject.rxBindingVersion"
+    compile "com.jakewharton.rxbinding2:rxbinding-support-v4:$rootProject.rxBindingVersion"
+    compile "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:$rootProject.rxBindingVersion"
+    compile "com.jakewharton.rxbinding2:rxbinding-design:$rootProject.rxBindingVersion"
+
+
     // logger
     compile "com.jakewharton.timber:timber:$rootProject.timberVersion"
 
@@ -60,7 +67,7 @@ dependencies {
     compile "com.google.firebase:firebase-database:$rootProject.firebaseVersion"
     compile "com.google.firebase:firebase-storage:$rootProject.firebaseVersion"
 
-
+    //reactive firbase
     compile 'com.github.frangsierra:rx2firebase:1.1.3'
 
     compile 'com.android.support.constraint:constraint-layout:1.0.2'

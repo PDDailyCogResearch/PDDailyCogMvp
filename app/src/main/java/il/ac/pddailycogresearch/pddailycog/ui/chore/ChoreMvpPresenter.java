@@ -35,4 +35,6 @@ public interface ChoreMvpPresenter<V extends ChoreMvpView> extends MvpPresenter<
     void onInstructionBtnClick();
 
     void onTakePictureClick();
+
+    void onExitClick();
 }

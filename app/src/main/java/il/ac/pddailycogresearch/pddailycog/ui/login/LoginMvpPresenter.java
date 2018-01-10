@@ -26,6 +26,6 @@ import il.ac.pddailycogresearch.pddailycog.ui.base.MvpPresenter;
 @PerActivity
 public interface LoginMvpPresenter<V extends LoginMvpView> extends MvpPresenter<V> {
 
-    void onServerLoginClick(String email, String password);
+    void onSignUpClick(String username, String password, String confirmPassword);
 
 }

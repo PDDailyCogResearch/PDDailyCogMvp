@@ -30,9 +30,9 @@ public final class AppConstants {
 
     public static final String CHORES_KEY = "chores";
     public static final String USERS_KEY = "users";
-    public static final String PREF_NAME = "mindorks_pref";
+    public static final String  MAIL_SUFFIX = "@pddaily.com";
 
-    public static final long CHORES_AMOUNT = 3;
+    public static final long CHORES_AMOUNT = 1;
 
     public static final long NULL_INDEX = -1L;
 
@@ -40,6 +40,7 @@ public final class AppConstants {
     public static final String SEED_DATABASE_QUESTIONS = "seed/questions.json";
 
     public static final String TIMESTAMP_FORMAT = "yyyyMMdd_HHmmss";
+    public static final String HAS_NO_CHORES_MSG = "User has no chores";
 
     private AppConstants() {
         // This utility class is not publicly instantiable

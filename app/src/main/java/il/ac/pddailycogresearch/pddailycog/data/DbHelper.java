@@ -25,7 +25,9 @@ public interface DbHelper {
 
     String getCurrentUserUid();
 
-    Maybe<Boolean> login(String email, String password, final DbLoginListener dbLoginListener);
+    Maybe<Boolean> login(String username, String password);
+
+    Maybe<Boolean> signup(String username, String password);
 
     Maybe<Chore> retrieveLastChore();
 

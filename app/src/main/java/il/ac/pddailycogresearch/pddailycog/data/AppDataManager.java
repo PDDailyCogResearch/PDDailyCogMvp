@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
+ *
  * Created by janisharali on 25/12/16.
  */
 
@@ -47,8 +48,13 @@ public class AppDataManager implements DataManager {
         return mDbHelper.getCurrentUserDisplayName();
     }
 
-    public Maybe<Boolean> login(String email, String password, DbHelper.DbLoginListener dbLoginListener){
-        return mDbHelper.login(email,password,dbLoginListener);
+    public Maybe<Boolean> login(String username, String password){
+        return mDbHelper.login(username,password);
+    }
+
+    @Override
+    public Maybe<Boolean> signup(String username, String password) {
+        return mDbHelper.signup(username,password);
     }
 
     @Override

@@ -54,8 +54,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V>
             getMvpView().openLoginActivity();
             return;
         }
-        String displayName = getDataManager().getCurrentUserDisplayName();
-        getMvpView().showMessage(displayName);
         getMvpView().openChoreActivity();
     }
 }

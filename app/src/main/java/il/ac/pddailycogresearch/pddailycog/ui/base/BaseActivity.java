@@ -18,6 +18,7 @@ package il.ac.pddailycogresearch.pddailycog.ui.base;
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,10 +36,12 @@ import il.ac.pddailycogresearch.pddailycog.R;
 import il.ac.pddailycogresearch.pddailycog.di.component.ActivityComponent;
 import il.ac.pddailycogresearch.pddailycog.di.component.DaggerActivityComponent;
 import il.ac.pddailycogresearch.pddailycog.di.module.ActivityModule;
+import il.ac.pddailycogresearch.pddailycog.ui.login.LoginActivity;
 import il.ac.pddailycogresearch.pddailycog.utils.CommonUtils;
 import il.ac.pddailycogresearch.pddailycog.utils.NetworkUtils;
 
 import butterknife.Unbinder;
+import io.reactivex.Maybe;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
@@ -128,6 +131,24 @@ public abstract class BaseActivity extends AppCompatActivity
         showMessage(getString(resId));
     }
 
+    public Maybe<Boolean> createAlertDialog(final int title, final int message){
+        return CommonUtils.createAlertDialog(this,title,message);
+    }
+
+    @Override
+    public void openHomeActivity(){
+        Intent startMain = new Intent(Intent.ACTION_MAIN);
+        startMain.addCategory(Intent.CATEGORY_HOME);
+        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(startMain);
+    }
+
+    @Override
+    public void finishView(){
+        this.finish();
+    }
+
+
     @Override
     public boolean isNetworkConnected() {
         return NetworkUtils.isNetworkConnected(getApplicationContext());
@@ -144,7 +165,7 @@ public abstract class BaseActivity extends AppCompatActivity
 
     @Override
     public void openActivityOnTokenExpire() {
-      //  startActivity(LoginActivity.getStartIntent(this));
+         startActivity(LoginActivity.getStartIntent(this));
         finish();
     }
 

@@ -21,6 +21,8 @@ package il.ac.pddailycogresearch.pddailycog.ui.base;
 
 import android.support.annotation.StringRes;
 
+import io.reactivex.Maybe;
+
 /**
  * Base interface that any class that wants to act as a View in the MVP (Model View Presenter)
  * pattern must implement. Generally this interface will be extended by a more specific interface
@@ -41,6 +43,13 @@ public interface MvpView {
     void showMessage(String message);
 
     void showMessage(@StringRes int resId);
+
+    Maybe<Boolean> createAlertDialog(final int title, final int message);
+
+    void openHomeActivity();
+
+    void finishView();
+
 
     boolean isNetworkConnected();
 

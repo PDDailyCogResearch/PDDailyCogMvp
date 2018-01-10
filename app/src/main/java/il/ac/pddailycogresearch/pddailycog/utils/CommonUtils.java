@@ -18,10 +18,12 @@ package il.ac.pddailycogresearch.pddailycog.utils;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.provider.Settings;
+import android.support.v7.app.AlertDialog;
 
 import il.ac.pddailycogresearch.pddailycog.R;
 
@@ -32,6 +34,15 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import io.reactivex.Maybe;
+import io.reactivex.MaybeEmitter;
+import io.reactivex.MaybeOnSubscribe;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.annotations.NonNull;
+
 
 /**
  * Created by janisharali on 27/01/17.
@@ -57,6 +68,37 @@ public final class CommonUtils {
         progressDialog.setCanceledOnTouchOutside(false);
         return progressDialog;
     }
+
+    public static Maybe<Boolean> createAlertDialog(final Context context, final int title, final int message) {
+        return Maybe.create(
+                new MaybeOnSubscribe<Boolean>() {
+                    @Override
+                    public void subscribe(final @NonNull MaybeEmitter<Boolean> e) throws Exception {
+                        final AlertDialog ad = new AlertDialog.Builder(context)
+                                .setTitle(title)
+                                .setMessage(message)
+                                .setPositiveButton(android.R.string.ok,
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                e.onSuccess(true);
+                                            }
+                                        })
+                                .setNegativeButton(android.R.string.cancel,
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                e.onSuccess(false);
+                                            }
+                                        })
+                                .create();
+                        ad.show();
+                    }
+                }
+        );
+    }
+
+
 
     @SuppressLint("all")
     public static String getDeviceId(Context context) {
