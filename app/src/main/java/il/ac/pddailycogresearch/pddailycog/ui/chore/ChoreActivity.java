@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.jakewharton.rxbinding2.widget.RxTextView;
+
 import java.util.ArrayList;
 
 import javax.inject.Inject;
@@ -26,6 +28,9 @@ import il.ac.pddailycogresearch.pddailycog.data.model.Chore;
 import il.ac.pddailycogresearch.pddailycog.ui.base.BaseActivity;
 import il.ac.pddailycogresearch.pddailycog.utils.ImageUtils;
 import il.ac.pddailycogresearch.pddailycog.utils.ViewGroupUtils;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 
 public class ChoreActivity extends BaseActivity implements ChoreMvpView {
 
@@ -48,12 +53,14 @@ public class ChoreActivity extends BaseActivity implements ChoreMvpView {
     Button choreInstructionBtn;
     @BindView(R.id.take_picture_btn)
     Button takePictureBtn;
-
-    View currentBodyView;
-    ArrayList<View> bodyViews = new ArrayList<>();
     @BindView(R.id.instr_sound_btn)
     Button instrSoundBtn;
 
+    View currentBodyView;
+    ArrayList<View> bodyViews = new ArrayList<>();
+
+    private CompositeDisposable compositeDisposable =
+            new CompositeDisposable();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -86,12 +93,32 @@ public class ChoreActivity extends BaseActivity implements ChoreMvpView {
     @Override
     protected void onDestroy() {
         mPresenter.onDetach();
+        compositeDisposable.clear();
         super.onDestroy();
     }
 
     @Override
     protected void setUp() {
         mPresenter.onViewInitialized();
+        subscribeRxBindingListeners();
+    }
+
+    private void subscribeRxBindingListeners() {
+        compositeDisposable.add(
+                RxTextView.textChanges((EditText)bodyViews.get(Chore.PartsConstants.TEXT_INPUT-1))
+                        .subscribe(new Consumer<CharSequence>() {
+                            @Override
+                            public void accept(@NonNull CharSequence text) throws Exception {
+                                if(text.length()==0)
+                                    choreNextBtn.setEnabled(false);
+                                else
+                                    choreNextBtn.setEnabled(true);
+
+                            }
+                        }
+                        )
+        );
+
     }
 
     @OnClick({R.id.chore_exit_btn, R.id.chore_instruction_btn, R.id.chore_help_btn, R.id.chore_next_btn,
@@ -132,30 +159,38 @@ public class ChoreActivity extends BaseActivity implements ChoreMvpView {
     public void replaceBodyViews(int viewIdx) {
         choreHeadlineTextview.setText(getResources().getStringArray(R.array.chore_headers)[viewIdx]);
         ViewGroupUtils.replaceViewInLinearLayout(currentBodyView, bodyViews.get(viewIdx));
-        if (viewIdx == Chore.PartsConstants.TAKE_PICTURE - 1) {
+        handleViewsSpecificRequirements(viewIdx+1);
+        currentBodyView = bodyViews.get(viewIdx);
+    }
+
+    private void handleViewsSpecificRequirements(int viewNumber) {
+        if(viewNumber==Chore.PartsConstants.INSTRUCTION) {
+            choreInstructionBtn.setVisibility(View.GONE);
+            instrSoundBtn.setVisibility(View.VISIBLE);
+        }
+        else {
+            choreInstructionBtn.setVisibility(View.VISIBLE);
+            instrSoundBtn.setVisibility(View.GONE);
+        }
+
+        if(viewNumber==Chore.PartsConstants.TAKE_PICTURE) {
             takePictureBtn.setVisibility(View.VISIBLE);
             if (imgUri == null)
                 choreNextBtn.setEnabled(false);
-        } else {
+        }
+        else {
             takePictureBtn.setVisibility(View.GONE);
             choreNextBtn.setEnabled(true);
         }
-        currentBodyView = bodyViews.get(viewIdx);
+
+        if(viewNumber==Chore.PartsConstants.TEXT_INPUT) {
+            choreNextBtn.setEnabled(false);
+        }
     }
 
     @Override
     public void setChoreInstruction(Integer choreNum) {
         choreInstructionTextview.setText(getResources().getStringArray(R.array.chore_instructions)[choreNum - 1]);
-    }
-
-    @Override
-    public void showSoundBtn() {
-        instrSoundBtn.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void hideSoundBtn() {
-        instrSoundBtn.setVisibility(View.GONE);
     }
 
 
@@ -191,11 +226,15 @@ public class ChoreActivity extends BaseActivity implements ChoreMvpView {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE ) {
             ImageView imageView = (ImageView) bodyViews.get(Chore.PartsConstants.TAKE_PICTURE - 1);
-            ImageUtils.setPic(imageView, imgAbsolutePath);
+            if(resultCode==RESULT_OK) {
+                ImageUtils.setPic(imageView, imgAbsolutePath);
+                choreNextBtn.setEnabled(true);
+            }
+            else
+                imageView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0)); //TODO change hard-coded
 
-            choreNextBtn.setEnabled(true);
         }
     }
     //endregion

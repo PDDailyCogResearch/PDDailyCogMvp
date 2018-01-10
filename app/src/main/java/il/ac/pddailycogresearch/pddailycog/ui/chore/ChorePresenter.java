@@ -42,6 +42,9 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
     private Chore currentChore;
     private Boolean isInstrcClicked=false;
 
+    private CompositeDisposable compositeDisposable =
+            new CompositeDisposable();
+
     @Inject
     public ChorePresenter(DataManager dataManager,
                           SchedulerProvider schedulerProvider,
@@ -55,32 +58,40 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
         retrieveChore();
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        compositeDisposable.clear();
+    }
+
     private void retrieveChore() {
-        getDataManager().retrieveChore().doOnSubscribe(
-                new Consumer<Disposable>() {
-                    @Override
-                    public void accept(@NonNull Disposable disposable) throws Exception {
-                        getMvpView().showLoading();
-                    }
-                }
-        ).subscribe(
-                new Consumer<Chore>() {
-                    @Override
-                    public void accept(@NonNull Chore chore) throws Exception {
-                        updateCurrentChore(chore);
-                        getMvpView().hideLoading();
-                    }
-                },
-                new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        getMvpView().hideLoading();
-                        if (throwable.getMessage().equals(AppConstants.HAS_NO_CHORES_MSG))
-                            updateCurrentChore(new Chore(1)); //new user, create first chore
-                        else
-                            getMvpView().onError(throwable.getMessage());
-                    }
-                }
+        compositeDisposable.add(
+                getDataManager().retrieveChore().doOnSubscribe(
+                        new Consumer<Disposable>() {
+                            @Override
+                            public void accept(@NonNull Disposable disposable) throws Exception {
+                                getMvpView().showLoading();
+                            }
+                        }
+                ).subscribe(
+                        new Consumer<Chore>() {
+                            @Override
+                            public void accept(@NonNull Chore chore) throws Exception {
+                                updateCurrentChore(chore);
+                                getMvpView().hideLoading();
+                            }
+                        },
+                        new Consumer<Throwable>() {
+                            @Override
+                            public void accept(@NonNull Throwable throwable) throws Exception {
+                                getMvpView().hideLoading();
+                                if (throwable.getMessage().equals(AppConstants.HAS_NO_CHORES_MSG))
+                                    updateCurrentChore(new Chore(1)); //new user, create first chore
+                                else
+                                    getMvpView().onError(throwable.getMessage());
+                            }
+                        }
+                )
         );
     }
 
@@ -108,7 +119,6 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
 
     @Override
     public void onNextClick() {
-        getMvpView().hideSoundBtn();
         if(isInstrcClicked) {
             isInstrcClicked=false;
             viewCurrentPart();
@@ -147,25 +157,24 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
     }
 
     private void saveImage(Uri imageUri) {
-        if(imageUri!=null)
-        getDataManager().saveImage(imageUri).subscribe(
-                new Consumer<Uri>() {
-                    @Override
-                    public void accept(@NonNull Uri uri) throws Exception {
-                        currentChore.setResultImg(uri.toString());
-                    }
-                }
-        );
+        if (imageUri != null)
+            compositeDisposable.add(
+                    getDataManager().saveImage(imageUri).subscribe(
+                            new Consumer<Uri>() {
+                                @Override
+                                public void accept(@NonNull Uri uri) throws Exception {
+                                    currentChore.setResultImg(uri.toString());
+                                }
+                            }
+                    )
+            );
     }
 
     @Override
     public void onInstructionBtnClick() {
-        if(currentChore.getCurrentPartNum()!=Chore.PartsConstants.INSTRUCTION) {//ignore press when in instruction
-            currentChore.increaseInstrcClicksNum();
-            isInstrcClicked = true;
-            getMvpView().replaceBodyViews(Chore.PartsConstants.INSTRUCTION - 1);
-            getMvpView().showSoundBtn();
-        }
+        currentChore.increaseInstrcClicksNum();
+        isInstrcClicked = true;
+        getMvpView().replaceBodyViews(Chore.PartsConstants.INSTRUCTION - 1);
     }
 
     @Override
@@ -176,22 +185,24 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
 
     @Override
     public void onExitClick() {
-        getMvpView().createAlertDialog(R.string.warning_header,R.string.exit_warning_text).subscribe(
-                new Consumer<Boolean>() {
-                    @Override
-                    public void accept(@NonNull Boolean aBoolean) throws Exception {
-                        if(aBoolean){
-                            getDataManager().saveChore(currentChore);
-                            getMvpView().openHomeActivity();
+        compositeDisposable.add(
+                getMvpView().createAlertDialog(R.string.warning_header, R.string.exit_warning_text).subscribe(
+                        new Consumer<Boolean>() {
+                            @Override
+                            public void accept(@NonNull Boolean aBoolean) throws Exception {
+                                if (aBoolean) {
+                                    getDataManager().saveChore(currentChore);
+                                    getMvpView().openHomeActivity();
+                                }
+                            }
+                        },
+                        new Consumer<Throwable>() {
+                            @Override
+                            public void accept(@NonNull Throwable throwable) throws Exception {
+                                getMvpView().onError(throwable.getMessage());
+                            }
                         }
-                    }
-                },
-                new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        getMvpView().onError(throwable.getMessage());
-                    }
-                }
+                )
         );
     }
 
