@@ -1,4 +1,4 @@
-package il.ac.pddailycogresearch.pddailycog.ui;
+package il.ac.pddailycogresearch.pddailycog.receivers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

@@ -54,7 +54,7 @@
         </provider>
 
         <receiver
-            android:name=".ui.ConnectivityChangeReceiver"
+            android:name=".receivers.ConnectivityChangeReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
