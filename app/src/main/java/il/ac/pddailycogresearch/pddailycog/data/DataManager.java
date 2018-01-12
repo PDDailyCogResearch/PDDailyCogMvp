@@ -33,6 +33,8 @@ public interface DataManager {
 
     boolean isUserCollisionException(Throwable throwable);
 
+    Maybe<String> updateChoreImageUrl();
+
     //TODO retrieve chore, see how its needed...
 
 }

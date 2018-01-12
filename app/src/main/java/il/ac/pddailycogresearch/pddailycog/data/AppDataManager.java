@@ -48,6 +48,11 @@ public class AppDataManager implements DataManager {
         return mDbHelper.isUserCollisionException(throwable);
     }
 
+    @Override
+    public Maybe<String> updateChoreImageUrl() {
+        return null;
+    }
+
     public String getCurrentUserDisplayName()
     {
         return mDbHelper.getCurrentUserDisplayName();

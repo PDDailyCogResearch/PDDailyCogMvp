@@ -157,7 +157,8 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
     }
 
     private void saveImage(Uri imageUri) {
-        if (imageUri != null)
+        currentChore.setResultImg(imageUri.toString());
+        /*if (imageUri != null)
             compositeDisposable.add(
                     getDataManager().saveImage(imageUri).subscribe(
                             new Consumer<Uri>() {
@@ -167,7 +168,7 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
                                 }
                             }
                     )
-            );
+            );*/
     }
 
     @Override
