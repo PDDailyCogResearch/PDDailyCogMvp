@@ -1,11 +1,14 @@
 package il.ac.pddailycogresearch.pddailycog.ui.chore;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
@@ -26,11 +29,14 @@ import butterknife.OnClick;
 import il.ac.pddailycogresearch.pddailycog.R;
 import il.ac.pddailycogresearch.pddailycog.data.model.Chore;
 import il.ac.pddailycogresearch.pddailycog.ui.base.BaseActivity;
+import il.ac.pddailycogresearch.pddailycog.utils.CommonUtils;
 import il.ac.pddailycogresearch.pddailycog.utils.ImageUtils;
 import il.ac.pddailycogresearch.pddailycog.utils.ViewGroupUtils;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
+
+import static il.ac.pddailycogresearch.pddailycog.utils.CommonUtils.isAirplaneMode;
 
 public class ChoreActivity extends BaseActivity implements ChoreMvpView {
 
@@ -55,6 +61,8 @@ public class ChoreActivity extends BaseActivity implements ChoreMvpView {
     Button takePictureBtn;
     @BindView(R.id.instr_sound_btn)
     Button instrSoundBtn;
+    @BindView(R.id.button_modeOn)
+    Button modeOnBtn;
 
     View currentBodyView;
     ArrayList<View> bodyViews = new ArrayList<>();
@@ -122,7 +130,7 @@ public class ChoreActivity extends BaseActivity implements ChoreMvpView {
     }
 
     @OnClick({R.id.chore_exit_btn, R.id.chore_instruction_btn, R.id.chore_help_btn, R.id.chore_next_btn,
-            R.id.take_picture_btn, R.id.instr_sound_btn})
+            R.id.take_picture_btn, R.id.instr_sound_btn, R.id.button_modeOn})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.chore_exit_btn:
@@ -144,8 +152,12 @@ public class ChoreActivity extends BaseActivity implements ChoreMvpView {
             case R.id.instr_sound_btn:
                 localFoo();
                 break;
+            case R.id.button_modeOn:
+                startActivityForResult(new Intent(Settings.ACTION_AIRPLANE_MODE_SETTINGS), 0);
+                isAirplaneMode(this);
         }
     }
+
 
     private void localFoo() {
         MediaPlayer mpori;

@@ -10,22 +10,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/chore_exit_btn"
-            android:text="exit"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/chore_headline_textview"
             android:text="temp head"/>
+
+        <Button
+            android:id="@+id/chore_exit_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="exit" />
+
         <Button
             android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/chore_instruction_btn"
             android:text="instrctn"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_modeOn"
+            android:text="mode on"/>
     </LinearLayout>
     <TextView
         android:layout_width="match_parent"
