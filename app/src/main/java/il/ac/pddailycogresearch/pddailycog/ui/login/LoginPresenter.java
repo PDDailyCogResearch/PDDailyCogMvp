@@ -21,14 +21,14 @@ import com.androidnetworking.error.ANError;*/
 
 import il.ac.pddailycogresearch.pddailycog.R;
 import il.ac.pddailycogresearch.pddailycog.data.DataManager;
-import il.ac.pddailycogresearch.pddailycog.data.DbHelper;
 import il.ac.pddailycogresearch.pddailycog.ui.base.BasePresenter;
-import il.ac.pddailycogresearch.pddailycog.utils.CommonUtils;
 import il.ac.pddailycogresearch.pddailycog.utils.rx.SchedulerProvider;
 
 import javax.inject.Inject;
 
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
 /**
@@ -40,6 +40,10 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V>
 
     private static final String TAG = "LoginPresenter";
 
+    private CompositeDisposable compositeDisposable =
+            new CompositeDisposable();
+
+
     @Inject
     public LoginPresenter(DataManager dataManager,
                           SchedulerProvider schedulerProvider,
@@ -48,79 +52,92 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V>
     }
 
     @Override
-    public void onServerLoginClick(String email, String password) {
+    public void onDetach() {
+        super.onDetach();
+        compositeDisposable.clear();
+    }
+
+    @Override
+    public void onSignUpClick(final String username, final String password, String confirmPassword) {
         //validate email and password
-        if (email == null || email.isEmpty()) {
-            getMvpView().onError(R.string.empty_email);
+        if (username == null || username.isEmpty()) {
+            getMvpView().onError(R.string.empty_username);
             return;
         }
-        if (!CommonUtils.isEmailValid(email)) {
-            getMvpView().onError(R.string.invalid_email);
+        if (password == null || password.length() < 6) {
+            getMvpView().onError(R.string.short_password);
             return;
         }
-        if (password == null || password.isEmpty()) {
-            getMvpView().onError(R.string.empty_password);
+        if (confirmPassword == null || confirmPassword.isEmpty()) {
+            getMvpView().onError(R.string.no_confirm_password);
             return;
         }
-        getMvpView().showLoading();
-        getDataManager().login(email, password, new DbHelper.DbLoginListener() {
-            @Override
-            public void onLoginSuccess(String displayName) {
-                getMvpView().hideLoading();
-                getMvpView().openMainActivity();
-                getMvpView().onError("yay you are "+displayName);//TODO delete
-            }
+        if (!password.equals(confirmPassword)) {
+            getMvpView().onError(R.string.unmatch_passwords);
+            return;
+        }
 
-            @Override
-            public void onLoginFailure(Exception exception) {
-                getMvpView().hideLoading();
-                getMvpView().onError(exception.getMessage());
-            }
-        });
-
-        //region TODO replace
-        // getMvpView().showLoading();
-        /*getCompositeDisposable().add(getDataManager()
-                .doServerLoginApiCall(new LoginRequest.ServerLoginRequest(email, password))
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(new Consumer<LoginResponse>() {
-                    @Override
-                    public void accept(LoginResponse response) throws Exception {
-                        getDataManager().updateUserInfo(
-                                response.getAccessToken(),
-                                response.getUserId(),
-                                DataManager.LoggedInMode.LOGGED_IN_MODE_SERVER,
-                                response.getUserName(),
-                                response.getUserEmail(),
-                                response.getGoogleProfilePicUrl());
-
-                        if (!isViewAttached()) {
-                            return;
+        compositeDisposable.add(
+                getDataManager().signup(username, password).doOnSubscribe(
+                        new Consumer<Disposable>() {
+                            @Override
+                            public void accept(@NonNull Disposable disposable) throws Exception {
+                                getMvpView().showLoading();
+                            }
                         }
+                )
+                        .subscribe(
+                                new Consumer<Boolean>() {
+                                    @Override
+                                    public void accept(@NonNull Boolean isSigned) throws Exception {
+                                        getMvpView().hideLoading();
+                                        if (isSigned)
+                                            getMvpView().openMainActivity();
+                                        else
+                                            getMvpView().onError(R.string.login_failed);
 
-                        getMvpView().hideLoading();
-                        getMvpView().openMainActivity();
+                                    }
+                                },
+                                new Consumer<Throwable>() {
+                                    @Override
+                                    public void accept(@NonNull Throwable throwable) throws Exception {
+                                        if (getDataManager().isUserCollisionException(throwable))
+                                            doLoginWhenSignUpFail(username, password);
+                                        else {
+                                            getMvpView().hideLoading();
+                                            getMvpView().onError(throwable.getMessage());
+                                        }
+                                    }
+                                }
+                        )
+        );
 
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
+    }
 
-                        if (!isViewAttached()) {
-                            return;
+    private void doLoginWhenSignUpFail(String username, String password) {
+        compositeDisposable.add(
+                getDataManager().login(username, password).subscribe(
+                        new Consumer<Boolean>() {
+                            @Override
+                            public void accept(@NonNull Boolean isLogged) throws Exception {
+                                getMvpView().hideLoading();
+                                if (isLogged) {
+                                    getMvpView().showMessage(R.string.logged_in);
+                                    getMvpView().openMainActivity();
+                                } else
+                                    getMvpView().onError(R.string.login_failed);
+
+                            }
+                        },
+                        new Consumer<Throwable>() {
+                            @Override
+                            public void accept(@NonNull Throwable throwable) throws Exception {
+                                getMvpView().hideLoading();
+                                getMvpView().onError(throwable.getMessage());
+                            }
                         }
-
-                        getMvpView().hideLoading();
-
-                        // handle the login error here
-                        if (throwable instanceof ANError) {
-                            ANError anError = (ANError) throwable;
-                            handleApiError(anError);
-                        }
-                    }
-                }));*/
-        //endregion
+                )
+        );
     }
 
 }

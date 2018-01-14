@@ -13,7 +13,7 @@
  * limitations under the License
  */
 
-package il.ac.pddailycogresearch.pddailycog.ui.login;
+package il.ac.pddailycogresearch.pddailycog.ui.chore;
 
 
 import il.ac.pddailycogresearch.pddailycog.di.PerActivity;
@@ -24,8 +24,17 @@ import il.ac.pddailycogresearch.pddailycog.ui.base.MvpPresenter;
  */
 
 @PerActivity
-public interface LoginMvpPresenter<V extends LoginMvpView> extends MvpPresenter<V> {
+public interface ChoreMvpPresenter<V extends ChoreMvpView> extends MvpPresenter<V> {
 
-    void onSignUpClick(String username, String password, String confirmPassword);
+    void onViewInitialized();
 
+    void onNextClick();
+
+    void foo();
+
+    void onInstructionBtnClick();
+
+    void onTakePictureClick();
+
+    void onExitClick();
 }

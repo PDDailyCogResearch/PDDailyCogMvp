@@ -1,22 +1,41 @@
 package il.ac.pddailycogresearch.pddailycog.data;
 
-import il.ac.pddailycogresearch.pddailycog.data.model.User;
+
+import android.net.Uri;
+
+import il.ac.pddailycogresearch.pddailycog.data.model.Chore;
+import io.reactivex.Maybe;
 
 /**
  * Created by שני on 08/11/2017.
  */
 
 public interface DbHelper {
-    public interface DbLoginListener {
-        public void onLoginSuccess(String displayName);
-        public void onLoginFailure(Exception exception);
+
+
+    boolean isUserCollisionException(Throwable throwable);
+
+    interface DbLoginListener {
+        void onLoginSuccess(String displayName);
+
+        void onLoginFailure(Exception exception);//TODO error handling
     }
 
-    public User getUser(String id);
+    boolean isUserLogged();
 
-    public String insertUser(User user) throws Exception;
+    String getCurrentUserDisplayName();
 
-    public String getCurrentUserDisplayName();
+    String getCurrentUserUid();
 
-    public void login(String email, String password, final DbLoginListener dbLoginListener);
+    Maybe<Boolean> login(String username, String password);
+
+    Maybe<Boolean> signup(String username, String password);
+
+    Maybe<Chore> retrieveLastChore();
+
+    void saveChore(Chore chore);
+
+    Maybe<Uri> saveImage(Uri image);
+
+    void logout();
 }

@@ -27,6 +27,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import il.ac.pddailycogresearch.pddailycog.R;
 import il.ac.pddailycogresearch.pddailycog.ui.base.BaseActivity;
+import il.ac.pddailycogresearch.pddailycog.ui.chore.ChoreActivity;
 import il.ac.pddailycogresearch.pddailycog.ui.login.LoginActivity;
 
 /**
@@ -77,6 +78,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void openLoginActivity() {
         startActivity(LoginActivity.getStartIntent(this));
+        finish();
+    }
+
+    @Override
+    public void openChoreActivity() {
+        startActivity(ChoreActivity.getStartIntent(this));
         finish();
     }
 

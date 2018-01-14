@@ -25,7 +25,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     //compile 'com.android.support:appcompat-v7:26.+'
-    
 
     // android support libraries
     compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
@@ -34,34 +33,49 @@ dependencies {
     compile "com.android.support:design:$rootProject.supportLibraryVersion"
     compile "com.android.support:support-vector-drawable:$rootProject.supportLibraryVersion"
     compile "com.android.support:animated-vector-drawable:$rootProject.supportLibraryVersion"
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
     // font
     compile "uk.co.chrisjenx:calligraphy:$rootProject.calligraphyVersion"
 
-
-    
     // code generator for view
-    compile 'com.jakewharton:butterknife:8.4.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    compile "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterKnifeVersion"
+
     // reactive
     compile "io.reactivex.rxjava2:rxjava:$rootProject.rxjava2Version"
     compile "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroidVersion"
+
+    //reactive views
+    compile "com.jakewharton.rxbinding2:rxbinding:$rootProject.rxBindingVersion"
+    compile "com.jakewharton.rxbinding2:rxbinding-support-v4:$rootProject.rxBindingVersion"
+    compile "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:$rootProject.rxBindingVersion"
+    compile "com.jakewharton.rxbinding2:rxbinding-design:$rootProject.rxBindingVersion"
+
 
     // logger
     compile "com.jakewharton.timber:timber:$rootProject.timberVersion"
 
     //dependency injection
-    compile 'com.google.dagger:dagger:2.8'
-    compile 'javax.inject:javax.inject:1'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.8'
-    provided 'javax.annotation:jsr250-api:1.0'
+    compile "com.google.dagger:dagger:$rootProject.dagger2Version"
+    compile "javax.inject:javax.inject:$rootProject.injectVersion"
+    annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
+    provided "javax.annotation:jsr250-api:$rootProject.annotationVersion"
 
-    //authentication
-    compile 'com.google.firebase:firebase-auth:10.0.1'
+    //Firebase - backend
+    compile "com.google.firebase:firebase-core:$rootProject.firebaseVersion"
+    compile "com.google.firebase:firebase-auth:$rootProject.firebaseVersion"
+    compile "com.google.firebase:firebase-database:$rootProject.firebaseVersion"
+    compile "com.google.firebase:firebase-storage:$rootProject.firebaseVersion"
 
+    //reactive firbase
+    compile 'com.github.frangsierra:rx2firebase:1.1.3'
+
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
+
+
 }
+
 
 
 apply plugin: 'com.google.gms.google-services'

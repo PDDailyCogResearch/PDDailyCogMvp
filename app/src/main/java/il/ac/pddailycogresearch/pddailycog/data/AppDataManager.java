@@ -1,15 +1,17 @@
 package il.ac.pddailycogresearch.pddailycog.data;
 
 import android.content.Context;
-import android.content.res.Resources;
+import android.net.Uri;
 
-import il.ac.pddailycogresearch.pddailycog.data.model.User;
+import il.ac.pddailycogresearch.pddailycog.data.model.Chore;
 import il.ac.pddailycogresearch.pddailycog.di.ApplicationContext;
+import io.reactivex.Maybe;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
+ *
  * Created by janisharali on 25/12/16.
  */
 
@@ -18,31 +20,32 @@ public class AppDataManager implements DataManager {
 
     private Context mContext;
     private DbHelper mDbHelper;
-    private SharedPrefsHelper mSharedPrefsHelper;
 
     @Inject
     public AppDataManager(@ApplicationContext Context context,
-                       DbHelper dbHelper,
-                       SharedPrefsHelper sharedPrefsHelper) {
+                       DbHelper dbHelper) {
         mContext = context;
         mDbHelper = dbHelper;
-        mSharedPrefsHelper = sharedPrefsHelper;
     }
 
-    public void saveAccessToken(String accessToken) {
-        mSharedPrefsHelper.put(SharedPrefsHelper.PREF_KEY_ACCESS_TOKEN, accessToken);
+    @Override
+    public Maybe<Chore> retrieveChore() {
+        return mDbHelper.retrieveLastChore();
     }
 
-    public String getAccessToken(){
-        return mSharedPrefsHelper.get(SharedPrefsHelper.PREF_KEY_ACCESS_TOKEN, null);
+    @Override
+    public void logout() {
+        mDbHelper.logout();
     }
 
-    public String createUser(User user) throws Exception {
-        return mDbHelper.insertUser(user);
+    @Override
+    public Maybe<Uri> saveImage(Uri image) {
+       return mDbHelper.saveImage(image);
     }
 
-    public User getUser(String userId) throws Resources.NotFoundException, NullPointerException {
-        return mDbHelper.getUser(userId);
+    @Override
+    public boolean isUserCollisionException(Throwable throwable) {
+        return mDbHelper.isUserCollisionException(throwable);
     }
 
     public String getCurrentUserDisplayName()
@@ -50,7 +53,22 @@ public class AppDataManager implements DataManager {
         return mDbHelper.getCurrentUserDisplayName();
     }
 
-    public void login(String email, String password, DbHelper.DbLoginListener dbLoginListener){
-        mDbHelper.login(email,password,dbLoginListener);
+    public Maybe<Boolean> login(String username, String password){
+        return mDbHelper.login(username,password);
+    }
+
+    @Override
+    public Maybe<Boolean> signup(String username, String password) {
+        return mDbHelper.signup(username,password);
+    }
+
+    @Override
+    public void saveChore(Chore chore) {
+        mDbHelper.saveChore(chore);
+    }
+
+    @Override
+    public boolean isUserLogged() {
+        return mDbHelper.isUserLogged();
     }
 }

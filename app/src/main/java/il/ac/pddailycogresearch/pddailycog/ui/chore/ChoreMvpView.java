@@ -13,19 +13,27 @@
  * limitations under the License
  */
 
-package il.ac.pddailycogresearch.pddailycog.ui.login;
+package il.ac.pddailycogresearch.pddailycog.ui.chore;
 
+import android.net.Uri;
 
-import il.ac.pddailycogresearch.pddailycog.di.PerActivity;
-import il.ac.pddailycogresearch.pddailycog.ui.base.MvpPresenter;
+import il.ac.pddailycogresearch.pddailycog.ui.base.MvpView;
 
 /**
  * Created by janisharali on 27/01/17.
  */
 
-@PerActivity
-public interface LoginMvpPresenter<V extends LoginMvpView> extends MvpPresenter<V> {
+public interface ChoreMvpView extends MvpView {
 
-    void onSignUpClick(String username, String password, String confirmPassword);
+
+    void replaceBodyViews(int viewIdx);
+
+    Uri getImgUri();
+
+    String getInputText();
+
+    void dispatchTakePictureIntent();
+
+    void setChoreInstruction(Integer choreNum);
 
 }

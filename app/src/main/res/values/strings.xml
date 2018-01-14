@@ -4,13 +4,30 @@
     <string name="some_error">Some Error Occurred!</string>
 
     <!--Login-->
-    <string name="login_dummy">Login Dummy</string>
     <string name="login">Login</string>
-    <string name="email">Email</string>
+    <string name="username">Username</string>
     <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
 
     <!--Login Validation-->
-    <string name="empty_email">Please provide a non empty email.</string>
-    <string name="invalid_email">Please provide a valid email.</string>
-    <string name="empty_password">Please provide a non empty password.</string>
+    <string name="empty_username">Please provide a non empty username.</string>
+    <string name="short_password">Password should be at least 6 characters.</string>
+    <string name="no_confirm_password">Please enter your password again for confirmation</string>
+    <string name="login_failed">login failed</string>
+
+    <string name="no_more_chores">no more chores</string>
+    <string name="signup">Sign Up</string>
+    <string name="unmatch_passwords">Passwords dont match</string>
+    <string name="logged_in">The user alredy exist, you logged in</string>
+    <string name="warning_header">Warning</string>
+    <string name="exit_warning_text">You are quiting without completing the chore. Are you sure?</string>
+    <string name="chore_finished">chore been completed</string>
+    <string-array name="chore_headers">
+        <item>Instruction</item>
+        <item>Take Picture</item>
+        <item>Insert Text</item>
+    </string-array>
+    <string-array name="chore_instructions">
+        <item>take your phone, find your key, put it on your bed and shoot a photo. sit there nnd insert time and date and your full name</item>
+    </string-array>
 </resources>

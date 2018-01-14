@@ -1,13 +1,11 @@
 package il.ac.pddailycogresearch.pddailycog.data;
 
-import android.content.Context;
-import android.content.res.Resources;
+import android.net.Uri;
 
-import il.ac.pddailycogresearch.pddailycog.data.model.User;
-import il.ac.pddailycogresearch.pddailycog.di.ApplicationContext;
-
-import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import il.ac.pddailycogresearch.pddailycog.data.model.Chore;
+import io.reactivex.Maybe;
 
 /**
  * Created by janisharali on 25/12/16.
@@ -16,15 +14,26 @@ import javax.inject.Singleton;
 @Singleton
 public interface DataManager {
 
-    public void saveAccessToken(String accessToken);
 
-    public String getAccessToken();
+    String getCurrentUserDisplayName();
 
-    public String createUser(User user) throws Exception;
+    Maybe<Boolean> login(String username, String password);
 
-    public User getUser(String userId) throws Resources.NotFoundException, NullPointerException;
+    Maybe<Boolean> signup(String username, String password);
 
-    public String getCurrentUserDisplayName();
+    void saveChore(Chore chore);
 
-    public void login(String email, String password, DbHelper.DbLoginListener dbLoginListener);
+    boolean isUserLogged();
+
+    Maybe<Chore> retrieveChore();
+
+    void logout();
+
+    Maybe<Uri> saveImage(Uri image);
+
+    boolean isUserCollisionException(Throwable throwable);
+
+    //TODO retrieve chore, see how its needed...
+
 }
+
