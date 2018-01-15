@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--Error messages-->
+    <string name="some_error">התרחשה שגיאה</string>
+    <string name="no_more_chores">nאין עוד משימות</string>
+
+    <!--Sign Up-->
+    <string name="signup">הרשמה</string>
+    <string name="username">שם משתמש</string>
+    <string name="password">סיסמה</string>
+    <string name="confirm_password">אשר סיסמה</string>
+
+    <!--Login Validation-->
+    <string name="empty_username">אנא ספק שם משתמש</string>
+    <string name="short_password">על הסיסמה להיות באורך 6 תווים לפחות</string>
+    <string name="no_confirm_password">אנא הכנס את סיסמתך שוב לצורך אישור</string>
+    <string name="login_failed">התחברות נכשלה</string>
+    <string name="unmatch_passwords">הסיסמאות אינן תואמות</string>
+    <string name="logged_in">המשתמש קיים, התחברת לחשבון</string>
+
+    <!--Warnings-->
+    <string name="warning_header">אזהרה</string>
+    <string name="exit_warning_text">אתה יוצא מבלי לסיים את המשימה. האם אתה בטוח?</string>
+    <string name="chore_finished">המשימה הושלמה</string>
+
+    <!--Chore Texts-->
+    <string-array name="chore_headers">
+        <item>הוראה</item>
+        <item>צלם תמונה</item>
+        <item>הכנס טקסט</item>
+    </string-array>
+
+    <string-array name="chore_instructions">
+        <item>קח את הטלפון וכוס מהמטבח, לך לחדר השינה, מקם את הכוס על כיסא או מדף בחדר השינה (צלם).  הקלד בטלפון התאריך והשעה ואז שם מלא (שם ושם משפחה) של אמא שלך</item>
+    </string-array>
+
+</resources>

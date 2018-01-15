@@ -24,9 +24,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="80dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="80dp"
+              android:layout_marginLeft="16dp"
+              android:layout_marginRight="16dp"
+              android:layout_marginTop="80dp"
         app:cardCornerRadius="7dp"
         app:cardElevation="22dp">
 
@@ -64,7 +64,6 @@
                     android:cursorVisible="true"
                     android:gravity="center|left|bottom"
                     android:hint="@string/username"
-                    android:inputType="textEmailAddress"
                     android:maxLength="50"
                     android:paddingBottom="10dp"
                     android:textColor="@color/black_effective"
@@ -119,6 +118,7 @@
                     android:cursorVisible="true"
                     android:gravity="center|left|bottom"
                     android:inputType="textPassword"
+                    android:imeOptions="actionDone"
                     android:maxLength="50"
                     android:paddingBottom="10dp"
                     android:textColor="@color/black_effective"

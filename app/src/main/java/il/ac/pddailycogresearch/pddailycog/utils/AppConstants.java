@@ -42,6 +42,7 @@ public final class AppConstants {
     public static final String TIMESTAMP_FORMAT = "dd-MM-yyyy_HH-mm-ss";
     public static final String HAS_NO_CHORES_MSG = "User has no chores";//TODO wtf
     public static final String LOCAL_URI_PREFIX = "content";
+    public static final double IMAGEVIEW_HEIGHT_PERCENTAGE = 0.60;
 
 
     private AppConstants() {

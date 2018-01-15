@@ -22,6 +22,7 @@ import javax.inject.Inject;
 import il.ac.pddailycogresearch.pddailycog.R;
 import il.ac.pddailycogresearch.pddailycog.data.DataManager;
 import il.ac.pddailycogresearch.pddailycog.data.model.Chore;
+import il.ac.pddailycogresearch.pddailycog.exceptions.InvalidChoreTimeAdding;
 import il.ac.pddailycogresearch.pddailycog.ui.base.BasePresenter;
 import il.ac.pddailycogresearch.pddailycog.utils.AppConstants;
 import il.ac.pddailycogresearch.pddailycog.utils.rx.SchedulerProvider;
@@ -41,9 +42,11 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
     private static final String TAG = "ChorePresenter";
     private Chore currentChore;
     private Boolean isInstrcClicked=false;
+    private long startCurrentViewedPartTime=0;
 
     private CompositeDisposable compositeDisposable =
             new CompositeDisposable();
+    private long takePictureStartTime;
 
     @Inject
     public ChorePresenter(DataManager dataManager,
@@ -118,6 +121,32 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
     }
 
     @Override
+    public void onViewReplace(Integer previousPart, Integer nextPart) {
+        updateTiming(previousPart);
+        if(nextPart!=0)
+            this.startCurrentViewedPartTime=System.currentTimeMillis();
+    }
+
+    private void updateTiming(Integer partEnded) {
+        if (this.startCurrentViewedPartTime != 0) {
+            long timeElapsed = System.currentTimeMillis() - this.startCurrentViewedPartTime;
+            getMvpView().showMessage("part ended: "+partEnded+"\n time elapsed: "+timeElapsed);
+
+            switch (partEnded) {
+                case Chore.PartsConstants.INSTRUCTION:
+                    currentChore.addTimeToInstructionTotalTime(timeElapsed);
+                    break;
+                case Chore.PartsConstants.TAKE_PICTURE:
+                    currentChore.addTimeToTakePictureTotalTime(timeElapsed);
+                    break;
+                case Chore.PartsConstants.TEXT_INPUT:
+                    currentChore.addTimeToTextInputTotalTime(timeElapsed);
+                    break;
+            }
+        }
+    }
+
+    @Override
     public void onNextClick() {
         if(isInstrcClicked) {
             isInstrcClicked=false;
@@ -181,11 +210,13 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
     @Override
     public void onTakePictureClick() {
         currentChore.increaseTakePicClickNum();
+        this.takePictureStartTime=System.currentTimeMillis();
         getMvpView().dispatchTakePictureIntent();
     }
 
     @Override
-    public void onExitClick() {
+    public void onExitClick(Integer currentView) {
+        updateTiming(currentView);
         compositeDisposable.add(
                 getMvpView().createAlertDialog(R.string.warning_header, R.string.exit_warning_text).subscribe(
                         new Consumer<Boolean>() {
@@ -207,8 +238,25 @@ public class ChorePresenter<V extends ChoreMvpView> extends BasePresenter<V>
         );
     }
 
+    @Override
+    public void onPictureTaken() {
+        long timeElapsed=System.currentTimeMillis()-this.takePictureStartTime;
+        currentChore.addTimeToTakePictureTotalTime(timeElapsed);
+    }
+
+    @Override
+    public void onDeleteCharacter() {
+        currentChore.increaseDeletedCharaters();
+    }
+
+    @Override
+    public void onAddCharacter() {
+        currentChore.increaseAddedCharacters();
+    }
+
     private void finishChore() {
         //TODO UI
+        updateTiming(Chore.PartsConstants.PARTS_AMOUNT);//update last part timing
         currentChore.setCompleted(true);
         getDataManager().saveChore(currentChore);
         getMvpView().showMessage(R.string.chore_finished);

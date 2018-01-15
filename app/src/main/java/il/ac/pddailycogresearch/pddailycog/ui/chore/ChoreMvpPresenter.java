@@ -28,6 +28,8 @@ public interface ChoreMvpPresenter<V extends ChoreMvpView> extends MvpPresenter<
 
     void onViewInitialized();
 
+    void onViewReplace(Integer previousPart, Integer nextPart);
+
     void onNextClick();
 
     void foo();
@@ -36,5 +38,13 @@ public interface ChoreMvpPresenter<V extends ChoreMvpView> extends MvpPresenter<
 
     void onTakePictureClick();
 
-    void onExitClick();
+    void onExitClick(Integer currentView);
+
+    void onPictureTaken();
+
+    void onDeleteCharacter();
+
+    void onAddCharacter();
+
+
 }
