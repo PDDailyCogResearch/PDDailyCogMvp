@@ -22,6 +22,7 @@ import android.content.DialogInterface;
 import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 
@@ -50,7 +51,7 @@ import io.reactivex.annotations.NonNull;
 
 public final class CommonUtils {
 
-    private static final String TAG = "CommonUtils";
+   private static final String TAG = "CommonUtils";
 
     private CommonUtils() {
         // This utility class is not publicly instantiable
@@ -132,5 +133,14 @@ public final class CommonUtils {
 
     public static String getTimeStamp() {
         return new SimpleDateFormat(AppConstants.TIMESTAMP_FORMAT, Locale.US).format(new Date());
+    }
+
+    public static boolean isAirplaneMode(Context context) {
+        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.JELLY_BEAN_MR1){
+            return Settings.System.getInt(context.getContentResolver(),Settings.Global.AIRPLANE_MODE_ON,0)==1;
+        } else {
+            return Settings.System.getInt(context.getContentResolver(),Settings.System.AIRPLANE_MODE_ON,0)==1;
+
+        }
     }
 }
