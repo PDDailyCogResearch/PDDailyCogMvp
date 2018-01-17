@@ -27,7 +27,7 @@ public class ConnectivityChangeReceiver extends BroadcastReceiver {
 
     private static final String TAG = "MY_RECEIVER";
     /***
-     * allow checking wether this is the first receiver
+     * allow checking wither this is the first receiver
      */
     private static int race=0;
 

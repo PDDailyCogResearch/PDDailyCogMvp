@@ -71,7 +71,7 @@ public class ChoreActivity extends BaseActivity implements ChoreMvpView {
     private CompositeDisposable compositeDisposable =
             new CompositeDisposable();
 
-    private int previousTextInputLength=0;
+    private int previousTextInputLength = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -96,7 +96,7 @@ public class ChoreActivity extends BaseActivity implements ChoreMvpView {
 
     private void initilizeBodyViews() {
         //currentBodyView = choreInstructionTextview;
-        currentBodyViewIdx=0;
+        currentBodyViewIdx = 0;
         bodyViews.add(choreInstructionTextview);
         bodyViews.add(new ImageView(this));
         bodyViews.add(new EditText(this));
@@ -117,23 +117,23 @@ public class ChoreActivity extends BaseActivity implements ChoreMvpView {
 
     private void subscribeRxBindingListeners() {
         compositeDisposable.add(
-                RxTextView.textChanges((EditText)bodyViews.get(Chore.PartsConstants.TEXT_INPUT-1))
+                RxTextView.textChanges((EditText) bodyViews.get(Chore.PartsConstants.TEXT_INPUT - 1))
                         .subscribe(new Consumer<CharSequence>() {
-                            @Override
-                            public void accept(@NonNull CharSequence text) throws Exception {
-                                if(text.length()==0)
-                                    choreNextBtn.setEnabled(false);
-                                else
-                                    choreNextBtn.setEnabled(true);
+                                       @Override
+                                       public void accept(@NonNull CharSequence text) throws Exception {
+                                           if (text.length() == 0)
+                                               choreNextBtn.setEnabled(false);
+                                           else
+                                               choreNextBtn.setEnabled(true);
 
-                                if(previousTextInputLength>text.length())
-                                    mPresenter.onDeleteCharacter();
-                                if(previousTextInputLength<text.length())
-                                    mPresenter.onAddCharacter();
-                                previousTextInputLength=text.length();
+                                           if (previousTextInputLength > text.length())
+                                               mPresenter.onDeleteCharacter();
+                                           if (previousTextInputLength < text.length())
+                                               mPresenter.onAddCharacter();
+                                           previousTextInputLength = text.length();
 
-                            }
-                        }
+                                       }
+                                   }
                         )
         );
 
@@ -148,11 +148,11 @@ public class ChoreActivity extends BaseActivity implements ChoreMvpView {
     @Override
     protected void onStop() {
         super.onStop();
-        mPresenter.onViewReplace(currentViewIdxToPartNum(),0);
+        mPresenter.onViewReplace(currentViewIdxToPartNum(), 0);
     }
 
     private int currentViewIdxToPartNum() {
-        return currentBodyViewIdx+1;
+        return currentBodyViewIdx + 1;
     }
 
     @OnClick({R.id.chore_exit_btn, R.id.chore_instruction_btn, R.id.chore_help_btn, R.id.chore_next_btn,
@@ -188,7 +188,7 @@ public class ChoreActivity extends BaseActivity implements ChoreMvpView {
         //TODO refactor
         MediaPlayer mpori;
 
-        mpori= MediaPlayer.create(getApplicationContext(), R.raw.temp_audio_instr);
+        mpori = MediaPlayer.create(getApplicationContext(), R.raw.temp_audio_instr);
         mpori.start();
     }
 
@@ -197,33 +197,31 @@ public class ChoreActivity extends BaseActivity implements ChoreMvpView {
     public void replaceBodyViews(int viewIdx) {
         choreHeadlineTextview.setText(getResources().getStringArray(R.array.chore_headers)[viewIdx]);
         ViewGroupUtils.replaceViewInLinearLayout(bodyViews.get(currentBodyViewIdx), bodyViews.get(viewIdx));
-        handleViewsSpecificRequirements(viewIdx+1);
-        mPresenter.onViewReplace(currentViewIdxToPartNum(),viewIdx+1);
+        handleViewsSpecificRequirements(viewIdx + 1);
+        mPresenter.onViewReplace(currentViewIdxToPartNum(), viewIdx + 1);
         //currentBodyView = bodyViews.get(viewIdx);
-        currentBodyViewIdx=viewIdx;
+        currentBodyViewIdx = viewIdx;
     }
 
     private void handleViewsSpecificRequirements(int viewNumber) {
-        if(viewNumber==Chore.PartsConstants.INSTRUCTION) {
+        if (viewNumber == Chore.PartsConstants.INSTRUCTION) {
             choreInstructionBtn.setVisibility(View.GONE);
             instrSoundBtn.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             choreInstructionBtn.setVisibility(View.VISIBLE);
             instrSoundBtn.setVisibility(View.GONE);
         }
 
-        if(viewNumber==Chore.PartsConstants.TAKE_PICTURE) {
+        if (viewNumber == Chore.PartsConstants.TAKE_PICTURE) {
             takePictureBtn.setVisibility(View.VISIBLE);
             if (imgUri == null)
                 choreNextBtn.setEnabled(false);
-        }
-        else {
+        } else {
             takePictureBtn.setVisibility(View.GONE);
             choreNextBtn.setEnabled(true);
         }
 
-        if(viewNumber==Chore.PartsConstants.TEXT_INPUT) {
+        if (viewNumber == Chore.PartsConstants.TEXT_INPUT) {
             choreNextBtn.setEnabled(false);
         }
     }
@@ -268,20 +266,19 @@ public class ChoreActivity extends BaseActivity implements ChoreMvpView {
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         int screenHeight = metrics.heightPixels;
-        int imageHeight = (int) Math.round(screenHeight* AppConstants.IMAGEVIEW_HEIGHT_PERCENTAGE);
+        int imageHeight = (int) Math.round(screenHeight * AppConstants.IMAGEVIEW_HEIGHT_PERCENTAGE);
         imageView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, imageHeight));
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE ) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE) {
             mPresenter.onPictureTaken();
             ImageView imageView = (ImageView) bodyViews.get(Chore.PartsConstants.TAKE_PICTURE - 1);
-            if(resultCode==RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 ImageUtils.setPic(imageView, imgAbsolutePath);
                 choreNextBtn.setEnabled(true);
-            }
-            else
+            } else
                 imageView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0)); //TODO change hard-coded
 
         }

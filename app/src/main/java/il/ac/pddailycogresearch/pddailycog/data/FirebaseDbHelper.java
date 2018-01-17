@@ -50,21 +50,21 @@ public class FirebaseDbHelper implements DbHelper {
     }
 
     private void initializeUserRef() {
-        if( mAuth.getCurrentUser() != null) {
+        if (mAuth.getCurrentUser() != null) {
             mUserReference = FirebaseDatabase.getInstance().getReference(AppConstants.USERS_KEY).child(getCurrentUserUid());
             mUserReference.keepSynced(true);//because persistence is enable, need to make sure the data is synced with database
-            mStorageReference=FirebaseStorage.getInstance().getReference().child(getCurrentUserUid());
+            mStorageReference = FirebaseStorage.getInstance().getReference().child(getCurrentUserUid());
         }
     }
 
     @Override
     public boolean isUserCollisionException(Throwable throwable) {
-        return throwable.getClass()==FirebaseAuthUserCollisionException.class;
+        return throwable.getClass() == FirebaseAuthUserCollisionException.class;
     }
 
     @Override
     public boolean isUserLogged() {
-        return mAuth.getCurrentUser()!=null;
+        return mAuth.getCurrentUser() != null;
     }
 
     public String getCurrentUserDisplayName() {
@@ -78,27 +78,28 @@ public class FirebaseDbHelper implements DbHelper {
 
     @Override
     public Maybe<Boolean> login(String username, String password) {
-        username = username+AppConstants.MAIL_SUFFIX;
+        username = username + AppConstants.MAIL_SUFFIX;
         return RxFirebaseAuth.signInWithEmailAndPassword(mAuth, username, password).map(
-                 new Function<AuthResult, Boolean>() {
-                     @Override
-                     public Boolean apply(@io.reactivex.annotations.NonNull AuthResult authResult) throws Exception {
-                         initializeUserRef();
-                         return authResult.getUser()!=null;
-                     }
-                 }
-         );
-
-    }
-    @Override
-    public Maybe<Boolean> signup(String username, String password){
-        username = username+AppConstants.MAIL_SUFFIX;
-        return RxFirebaseAuth.createUserWithEmailAndPassword(mAuth,username,password).map(
                 new Function<AuthResult, Boolean>() {
                     @Override
                     public Boolean apply(@io.reactivex.annotations.NonNull AuthResult authResult) throws Exception {
                         initializeUserRef();
-                        return authResult.getUser()!=null;
+                        return authResult.getUser() != null;
+                    }
+                }
+        );
+
+    }
+
+    @Override
+    public Maybe<Boolean> signup(String username, String password) {
+        username = username + AppConstants.MAIL_SUFFIX;
+        return RxFirebaseAuth.createUserWithEmailAndPassword(mAuth, username, password).map(
+                new Function<AuthResult, Boolean>() {
+                    @Override
+                    public Boolean apply(@io.reactivex.annotations.NonNull AuthResult authResult) throws Exception {
+                        initializeUserRef();
+                        return authResult.getUser() != null;
                     }
                 }
         );
@@ -109,17 +110,17 @@ public class FirebaseDbHelper implements DbHelper {
     @Override
     public Maybe<Chore> retrieveLastChore() {
 
-       return RxFirebaseDatabase.observeSingleValueEvent(mUserReference.child(AppConstants.CHORES_KEY).orderByKey().limitToLast(1), new Function<DataSnapshot, Chore>() {
-           @Override
-           public Chore apply(@io.reactivex.annotations.NonNull DataSnapshot dataSnapshot) throws Exception {
-               if (dataSnapshot.getChildren().iterator().hasNext()) {
-                   DataSnapshot ds = dataSnapshot.getChildren().iterator().next();
-                   Chore chore= ds.getValue(Chore.class);
-                   return chore;
-               }
-               throw new Exception(AppConstants.HAS_NO_CHORES_MSG);
-           }
-       });
+        return RxFirebaseDatabase.observeSingleValueEvent(mUserReference.child(AppConstants.CHORES_KEY).orderByKey().limitToLast(1), new Function<DataSnapshot, Chore>() {
+            @Override
+            public Chore apply(@io.reactivex.annotations.NonNull DataSnapshot dataSnapshot) throws Exception {
+                if (dataSnapshot.getChildren().iterator().hasNext()) {
+                    DataSnapshot ds = dataSnapshot.getChildren().iterator().next();
+                    Chore chore = ds.getValue(Chore.class);
+                    return chore;
+                }
+                throw new Exception(AppConstants.HAS_NO_CHORES_MSG);
+            }
+        });
 
     }
 
@@ -131,7 +132,7 @@ public class FirebaseDbHelper implements DbHelper {
     }
 
     public Maybe<Uri> saveImage(Uri image) {
-       return RxFirebaseStorage.putFile(mStorageReference.child(image.getLastPathSegment()),image).map(
+        return RxFirebaseStorage.putFile(mStorageReference.child(image.getLastPathSegment()), image).map(
                 new Function<UploadTask.TaskSnapshot, Uri>() {
                     @Override
                     public Uri apply(@io.reactivex.annotations.NonNull UploadTask.TaskSnapshot taskSnapshot) throws Exception {
@@ -143,12 +144,12 @@ public class FirebaseDbHelper implements DbHelper {
 
     @Override
     public void logout() {
-       mAuth.signOut();
+        mAuth.signOut();
     }
 
     //TODO delete this and write a script instead
     private void updateUser(final DbLoginListener dbLoginListener) {
-         FirebaseUser user = mAuth.getCurrentUser();
+        FirebaseUser user = mAuth.getCurrentUser();
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                 .setDisplayName("Bibi")
                 .build();
